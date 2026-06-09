@@ -1,107 +1,104 @@
 <?php
+include("db_connect.php"); 
 session_start();
-include("db_connect.php");
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-    $title = $_POST['title'];
-    $author = $_POST['author'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $title = trim($_POST['title']);
+    $author = trim($_POST['author']);
 
-    $stmt = $conn->prepare("INSERT INTO books (title, author) VALUES (?, ?)");
-    $stmt->bind_param("ss", $title, $author);
-    $stmt->execute();
+    if (!empty($title) && !empty($author)) {
+        $stmt = $conn->prepare("INSERT INTO books (title, author) VALUES (?, ?)");
+        $stmt->bind_param("ss", $title, $author);
 
-    echo "<p style='color:lightgreen;'>✅ Book added successfully!</p>";
+        if ($stmt->execute()) {
+            header("Location: books.php?success=1");
+            exit();
+        } else {
+            $error = "❌ Error adding book: " . $conn->error;
+        }
+    } else {
+        $error = "⚠️ Please fill in all fields.";
+    }
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title>Add Book</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Add Book - PageTurn</title>
     <style>
     body {
-        margin: 0;
-        padding: 0;
-        background-color: #1e1e1e;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        height: 100vh;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #0072ff, #00c6ff);
         display: flex;
-    }
-
-    .sidebar {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-        width: 300px;
-        background-color: #121212;
+        justify-content: center;
+        align-items: center;
         height: 100vh;
-        box-shadow: 0 0 20px #0d6efd;
+        color: #003366;
     }
 
-    .sidebar li a {
-        display: block;
-        color: #fff;
-        padding: 20px;
-        font-size: 20px;
-        text-decoration: none;
-        border-bottom: 1px solid #333;
-        transition: 0.3s;
-    }
-
-    .sidebar li a:hover {
-        background-color: #0d6efd;
-        box-shadow: 0 0 15px #0d6efd;
-    }
-
-    .content {
-        flex: 1;
+    .card {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(12px);
         padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        width: 380px;
+        text-align: center;
     }
 
     h2 {
-        font-size: 28px;
+        margin-bottom: 20px;
+        color: #003366;
+        font-weight: bold;
     }
 
-    input,
-    button {
+    input {
         padding: 12px;
         margin: 10px 0;
-        border-radius: 8px;
         border: none;
-        font-size: 16px;
+        border-radius: 8px;
+        width: 90%;
+        background: rgba(255, 255, 255, 0.4);
+        color: #003366;
     }
 
     button {
-        background: #00c6ff;
+        padding: 12px 20px;
+        background: #0072ff;
         color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
         cursor: pointer;
-        box-shadow: 0 0 10px #00c6ff;
+        transition: 0.3s;
+        width: 95%;
     }
 
     button:hover {
-        background: #0072ff;
-        box-shadow: 0 0 15px #0072ff;
+        background: #005fcc;
+    }
+
+    .error {
+        color: #ff4d4d;
+        margin-top: 10px;
+        font-weight: bold;
     }
     </style>
 </head>
 
 <body>
-    <ul class="sidebar">
-        <li><a href="dashboard.php">📚 Dashboard</a></li>
-        <li><a href="improved_books.php">📖 Books Catalog</a></li>
-        <li><a href="search_books.php">🔍 Search Books</a></li>
-        <li><a href="logout.php">📕 Logout</a></li>
-    </ul>
-    <div class="content">
-        <h2>➕ Add New Book</h2>
-        <form method="POST">
-            <input type="text" name="title" placeholder="Book Title" required><br>
-            <input type="text" name="author" placeholder="Author Name" required><br>
+    <div class="card">
+        <h2>📚 Add New Book</h2>
+        <form method="POST" action="">
+            <input type="text" name="title" placeholder="Enter book title"><br>
+            <input type="text" name="author" placeholder="Enter author name"><br>
             <button type="submit">Add Book</button>
         </form>
+        <?php if(isset($error)) echo "<p class='error'>$error</p>"; ?>
+        <div class="links">
+            <a href="books.php">⬅ Back to Books</a>
+        </div>
     </div>
 </body>
 

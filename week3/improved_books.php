@@ -7,124 +7,112 @@ if(!isset($_SESSION['user'])){
     exit();
 }
 
-$sql = "SELECT * FROM books";
-$result = mysqli_query($conn, $sql);
+$result = mysqli_query($conn, "SELECT * FROM books");
 ?>
 
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Improved Book Catalog</title>
+    <title>Improved Books – PageTurn</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #141e30, #243b55);
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .catalog-box {
-            background: rgba(0,0,0,0.7);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0px 0px 20px rgba(0,255,255,0.4);
-            width: 750px;
-            text-align: center;
-        }
-        h2 {
-            margin-bottom: 20px;
-            color: #00c6ff;
-            text-shadow: 0 0 10px #00c6ff;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #444;
-        }
-        th {
-            background: #00c6ff;
-            color: #fff;
-            text-shadow: 0 0 5px #00c6ff;
-        }
-        tr:hover {
-            background: rgba(0, 198, 255, 0.2);
-        }
-        a.action {
-            margin: 0 5px;
-            padding: 6px 12px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        a.edit {
-            background: #ffcc00;
-            color: #000;
-            box-shadow: 0 0 10px #ffcc00;
-        }
-        a.edit:hover {
-            background: #ff9900;
-            box-shadow: 0 0 20px #ff9900;
-        }
-        a.delete {
-            background: #ff416c;
-            color: #fff;
-            box-shadow: 0 0 10px #ff416c;
-        }
-        a.delete:hover {
-            background: #ff4b2b;
-            box-shadow: 0 0 20px #ff4b2b;
-        }
-        a.add {
-            background: #00c6ff;
-            color: #fff;
-            box-shadow: 0 0 10px #00c6ff;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-        }
-        a.add:hover {
-            background: #0072ff;
-            box-shadow: 0 0 20px #0072ff;
-        }
+    /* Modern low stock styling (soft amber glass instead of red) */
+    .low-stock {
+        background: rgba(255, 193, 7, 0.15);
+        /* soft amber glass */
+        backdrop-filter: blur(6px);
+        color: #b36b00;
+        /* warm amber text */
+        font-weight: bold;
+        border-left: 4px solid #ffc107;
+        /* amber accent stripe */
+    }
+
+    .success-msg {
+        color: green;
+        font-weight: bold;
+    }
+
+    .info-msg {
+        color: blue;
+        font-weight: bold;
+    }
+
+    /* Delete button stays red */
+    .delete-btn {
+        color: #fff;
+        background: #d9534f;
+        padding: 6px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+    .delete-btn:hover {
+        background: #c9302c;
+    }
+
+    .edit-btn {
+        color: #fff;
+        background: #007bff;
+        padding: 6px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+    .edit-btn:hover {
+        background: #0056b3;
+    }
     </style>
 </head>
+
 <body>
-    <div class="catalog-box">
-        <h2>📚 Improved Book Catalog</h2>
+    <?php include "sidebar.php"; ?>
+
+    <div class="main">
+        <h1 class="page-title">📘 Improved Books View</h1>
+
+        <!-- Feedback banners -->
+        <?php if(isset($_GET['deleted'])): ?>
+        <p class="success-msg">✅ Book deleted successfully!</p>
+        <?php elseif(isset($_GET['updated'])): ?>
+        <p class="info-msg">✏️ Book updated successfully!</p>
+        <?php elseif(isset($_GET['success'])): ?>
+        <p class="success-msg">➕ Book added successfully!</p>
+        <?php endif; ?>
+
         <table>
             <tr>
                 <th>ID</th>
                 <th>Title</th>
                 <th>Author</th>
+                <th>Genre</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Rating</th>
                 <th>Actions</th>
             </tr>
-            <?php
-            if(mysqli_num_rows($result) > 0){
-                while($row = mysqli_fetch_assoc($result)){
-                    echo "<tr>";
-                    echo "<td>".$row['id']."</td>";
-                    echo "<td>".$row['title']."</td>";
-                    echo "<td>".$row['author']."</td>";
-                    echo "<td>
-                        <a href='edit_book.php?id=".$row['id']."' class='action edit'>✏️ Edit</a>
-                        <a href='delete_book.php?id=".$row['id']."' class='action delete' onclick=\"return confirm('Delete this book?');\">🗑 Delete</a>
-                    </td>";
-                    echo "</tr>";
-                }
-            } else {
-                echo "<tr><td colspan='4'>No books found</td></tr>";
-            }
-            ?>
+
+            <?php while($row = mysqli_fetch_assoc($result)): ?>
+            <tr class="<?= ($row['stock'] < 10 ? 'low-stock' : '') ?>">
+                <td><?= $row['id'] ?></td>
+                <td><?= $row['title'] ?></td>
+                <td><?= $row['author'] ?></td>
+                <td><?= $row['genre'] ?></td>
+                <td>$<?= number_format($row['price'], 2) ?></td>
+                <td><?= $row['stock'] ?></td>
+                <td><?= $row['rating'] ?></td>
+                <td>
+                    <a href="edit_book.php?id=<?= $row['id'] ?>" class="edit-btn">✏️ Edit</a>
+                    <a href="delete_book.php?id=<?= $row['id'] ?>" class="delete-btn">🗑 Delete</a>
+                </td>
+            </tr>
+            <?php endwhile; ?>
         </table>
-        <a href="add_book.php" class="add">➕ Add New Book</a><br><br>
-        <a href="dashboard.php" class="add">⬅ Back to Dashboard</a>
+
+        <!-- Pagination placeholder -->
+        <p style="margin-top:15px; font-weight:bold;">Page 1 of 1 · <?= mysqli_num_rows($result) ?> results</p>
     </div>
 </body>
+
 </html>

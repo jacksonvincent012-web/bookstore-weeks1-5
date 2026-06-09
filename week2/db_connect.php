@@ -1,6 +1,9 @@
 <?php
+// Database connection for PageTurn Bookstore System
+
 $conn = mysqli_connect("localhost", "root", "", "bookstoredb");
+
 if(!$conn){
-    die("Connection Failed: " . mysqli_connect_error());
+    die("Database Connection Failed: " . mysqli_connect_error());
 }
 ?>

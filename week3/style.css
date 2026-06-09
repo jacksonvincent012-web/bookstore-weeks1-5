@@ -1,0 +1,163 @@
+/* GLOBAL BACKGROUND */
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  height: 100vh;
+  background: linear-gradient(135deg, #0072ff, #00c6ff);
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 230px;
+  height: 100vh;
+  background: rgba(26, 31, 54, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: white;
+  padding: 25px;
+  position: fixed;
+}
+
+.sidebar h2 {
+  margin-bottom: 30px;
+}
+
+.sidebar a {
+  display: block;
+  padding: 12px;
+  margin-bottom: 10px;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.sidebar a:hover {
+  background: rgba(0, 123, 255, 0.6);
+}
+
+/* MAIN CONTENT */
+.main {
+  margin-left: 260px;
+  padding: 30px;
+  color: #003366;
+}
+
+/* PAGE TITLES */
+.page-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+/* DASHBOARD CARDS */
+.cards {
+  display: flex;
+  gap: 20px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.25); /* frosted white */
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 25px;
+  border-radius: 12px;
+  width: 22%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  font-size: 22px;
+  text-align: center;
+  color: #003366; /* dark blue text */
+}
+
+/* TABLES */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.2); /* frosted white */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  color: #003366;
+}
+
+th,
+td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+th {
+  background: rgba(255, 255, 255, 0.3);
+  text-align: left;
+}
+
+/* BUTTONS */
+button,
+.btn {
+  background: rgba(0, 123, 255, 0.85);
+  color: white;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover,
+.btn:hover {
+  background: rgba(0, 95, 204, 0.9);
+}
+
+/* FORMS */
+input {
+  width: 90%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.25);
+  color: #003366;
+}
+
+input::placeholder {
+  color: #555;
+}
+
+/* LOGIN PAGE */
+.login-container {
+  width: 350px;
+  margin: 120px auto;
+  background: rgba(255, 255, 255, 0.25); /* frosted white */
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  color: #003366;
+}
+
+.login-container h1 {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.login-container p {
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.login-container input {
+  width: 100%;
+}
+
+.login-container button {
+  width: 100%;
+}
+
+.demo {
+  margin-top: 15px;
+  font-size: 13px;
+  color: #003366;
+}

@@ -1,108 +1,99 @@
 <?php
-session_start();
 include("db_connect.php");
+session_start();
 
-// Only allow admin
-if(!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin'){
-    echo "<p style='color:red;'>❌ Access denied. Admins only.</p>";
+if(!isset($_SESSION['user'])){
+    header("Location: login.php");
     exit();
 }
 
-// Stats
-$totalBooks = $conn->query("SELECT COUNT(*) AS count FROM books")->fetch_assoc()['count'];
-$totalAuthors = $conn->query("SELECT COUNT(DISTINCT author) AS count FROM books")->fetch_assoc()['count'];
-$recentBooks = $conn->query("SELECT title, author FROM books ORDER BY id DESC LIMIT 5");
+// Fetch data
+$totalBooks = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS count FROM books"))['count'];
+$mostAuthor = mysqli_fetch_assoc(mysqli_query($conn, "SELECT author, COUNT(*) AS count FROM books GROUP BY author ORDER BY count DESC LIMIT 1"));
+$totalRevenue = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(price * stock) AS revenue FROM books"))['revenue'];
+$topBook = mysqli_fetch_assoc(mysqli_query($conn, "SELECT title, rating FROM books ORDER BY rating DESC LIMIT 1"));
+$lowStock = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS low FROM books WHERE stock < 5"))['low'];
+$genres = mysqli_query($conn, "SELECT genre, COUNT(*) AS count FROM books GROUP BY genre");
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title>Reports</title>
+    <title>Reports - PageTurn</title>
     <style>
     body {
-        margin: 0;
-        padding: 0;
-        background: #1e1e1e;
-        color: #fff;
-        font-family: Arial;
-        height: 100vh;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #0072ff, #00c6ff);
         display: flex;
-    }
-
-    .sidebar {
-        width: 300px;
-        background: #121212;
-        height: 100vh;
-        box-shadow: 0 0 20px #0d6efd;
-        list-style: none;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: #003366;
         margin: 0;
-        padding: 0;
     }
 
-    .sidebar li a {
-        display: block;
-        color: #fff;
-        padding: 20px;
-        font-size: 20px;
-        text-decoration: none;
-        border-bottom: 1px solid #333;
-        transition: 0.3s;
-    }
-
-    .sidebar li a:hover {
-        background: #0d6efd;
-        box-shadow: 0 0 15px #0d6efd;
-    }
-
-    .content {
-        flex: 1;
+    .card {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(12px);
         padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        width: 700px;
+        text-align: center;
     }
 
     h2 {
-        font-size: 28px;
+        margin-bottom: 20px;
+        font-weight: bold;
     }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
+    .metric {
+        margin: 10px 0;
+        font-size: 18px;
+    }
+
+    .genre {
+        text-align: left;
         margin-top: 20px;
     }
 
-    th,
-    td {
-        border: 1px solid #555;
-        padding: 10px;
-        text-align: left;
+    a.back {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 20px;
+        background: #0072ff;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    a.back:hover {
+        background: #005fcc;
     }
     </style>
 </head>
 
 <body>
-    <ul class="sidebar">
-        <li><a href="dashboard.php">📚 Dashboard</a></li>
-        <li><a href="improved_books.php">📖 Books Catalog</a></li>
-        <li><a href="add_book.php">➕ Add Book</a></li>
-        <li><a href="search_books.php">🔍 Search Books</a></li>
-        <li><a href="logout.php">📕 Logout</a></li>
-    </ul>
-    <div class="content">
+    <div class="card">
         <h2>📊 Reports</h2>
-        <p>Total Books: <?php echo $totalBooks; ?></p>
-        <p>Total Authors: <?php echo $totalAuthors; ?></p>
-        <h3>🆕 Recent Books</h3>
-        <table>
-            <tr>
-                <th>Title</th>
-                <th>Author</th>
-            </tr>
-            <?php while($row = $recentBooks->fetch_assoc()){ ?>
-            <tr>
-                <td><?php echo $row['title']; ?></td>
-                <td><?php echo $row['author']; ?></td>
-            </tr>
+        <div class="metric">Total Books: <?= $totalBooks ?></div>
+        <div class="metric">Most Frequent Author: <?= htmlspecialchars($mostAuthor['author']) ?>
+            (<?= $mostAuthor['count'] ?> books)</div>
+        <div class="metric">Total Revenue: $<?= number_format($totalRevenue, 2) ?></div>
+        <div class="metric">Top Rated Book: <?= htmlspecialchars($topBook['title']) ?> (⭐ <?= $topBook['rating'] ?>)
+        </div>
+        <div class="metric">Low Stock Alerts: <?= $lowStock ?> books</div>
+
+        <div class="genre">
+            <h3>📚 Genre Breakdown</h3>
+            <?php while($g = mysqli_fetch_assoc($genres)){ ?>
+            <div><?= htmlspecialchars($g['genre']) ?>: <?= $g['count'] ?> books</div>
             <?php } ?>
-        </table>
+        </div>
+
+        <a href="dashboard.php" class="back">⬅ Back to Dashboard</a>
     </div>
 </body>
 

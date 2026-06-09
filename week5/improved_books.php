@@ -1,106 +1,120 @@
 <?php
-session_start();
 include("db_connect.php");
+session_start();
+
+if(!isset($_SESSION['user'])){
+    header("Location: login.php");
+    exit();
+}
+
+$sql = "SELECT * FROM books";
+$result = mysqli_query($conn, $sql);
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title>Books Catalog</title>
+    <title>Book Catalog - PageTurn</title>
     <style>
     body {
-        margin: 0;
-        padding: 0;
-        background: #1e1e1e;
-        color: #fff;
-        font-family: Arial;
-        height: 100vh;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #0072ff, #00c6ff);
         display: flex;
-    }
-
-    .sidebar {
-        width: 300px;
-        background: #121212;
-        height: 100vh;
-        box-shadow: 0 0 20px #0d6efd;
-        list-style: none;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: #003366;
         margin: 0;
-        padding: 0;
     }
 
-    .sidebar li a {
-        display: block;
-        color: #fff;
-        padding: 20px;
-        font-size: 20px;
-        text-decoration: none;
-        border-bottom: 1px solid #333;
-        transition: 0.3s;
-    }
-
-    .sidebar li a:hover {
-        background: #0d6efd;
-        box-shadow: 0 0 15px #0d6efd;
-    }
-
-    .content {
-        flex: 1;
+    .catalog-card {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(12px);
         padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        width: 900px;
+        text-align: center;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        font-weight: bold;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 20px;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 8px;
+        overflow: hidden;
     }
 
     th,
     td {
-        border: 1px solid #555;
-        padding: 10px;
+        padding: 12px;
         text-align: left;
+        color: #003366;
     }
 
-    a.btn {
-        padding: 8px 12px;
-        border-radius: 6px;
-        text-decoration: none;
+    th {
+        background: rgba(255, 255, 255, 0.6);
         font-weight: bold;
     }
 
-    .edit {
-        background: #00c6ff;
-        color: #fff;
-        box-shadow: 0 0 10px #00c6ff;
+    tr:nth-child(even) {
+        background: rgba(255, 255, 255, 0.2);
     }
 
-    .edit:hover {
+    a.action {
+        margin: 0 5px;
+        padding: 6px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    a.edit {
         background: #0072ff;
-        box-shadow: 0 0 15px #0072ff;
+        color: #fff;
     }
 
-    .delete {
+    a.edit:hover {
+        background: #005fcc;
+    }
+
+    a.delete {
         background: #ff4d4d;
         color: #fff;
-        box-shadow: 0 0 10px #ff4d4d;
     }
 
-    .delete:hover {
+    a.delete:hover {
         background: #cc0000;
-        box-shadow: 0 0 15px #cc0000;
+    }
+
+    a.add {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 20px;
+        background: #0072ff;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    a.add:hover {
+        background: #005fcc;
     }
     </style>
 </head>
 
 <body>
-    <ul class="sidebar">
-        <li><a href="dashboard.php">📚 Dashboard</a></li>
-        <li><a href="add_book.php">➕ Add Book</a></li>
-        <li><a href="search_books.php">🔍 Search Books</a></li>
-        <li><a href="logout.php">📕 Logout</a></li>
-    </ul>
-    <div class="content">
-        <h2>📘 Books Catalog</h2>
+    <div class="catalog-card">
+        <h2>📚 Book Catalog</h2>
         <table>
             <tr>
                 <th>ID</th>
@@ -109,20 +123,25 @@ include("db_connect.php");
                 <th>Actions</th>
             </tr>
             <?php
-            $result = $conn->query("SELECT * FROM books");
-            while($row = $result->fetch_assoc()){
-                echo "<tr>
-                        <td>{$row['id']}</td>
-                        <td>{$row['title']}</td>
-                        <td>{$row['author']}</td>
-                        <td>
-                            <a class='btn edit' href='edit_book.php?id={$row['id']}'>✏️ Edit</a>
-                            <a class='btn delete' href='delete_book.php?id={$row['id']}'>🗑 Delete</a>
-                        </td>
-                      </tr>";
+            if(mysqli_num_rows($result) > 0){
+                while($row = mysqli_fetch_assoc($result)){
+                    echo "<tr>";
+                    echo "<td>".$row['id']."</td>";
+                    echo "<td>".htmlspecialchars($row['title'])."</td>";
+                    echo "<td>".htmlspecialchars($row['author'])."</td>";
+                    echo "<td>
+                        <a href='edit_book.php?id=".$row['id']."' class='action edit'>✏️ Edit</a>
+                        <a href='delete_book.php?id=".$row['id']."' class='action delete' onclick=\"return confirm('Delete this book?');\">🗑 Delete</a>
+                    </td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='4'>No books found</td></tr>";
             }
             ?>
         </table>
+        <a href="add_book.php" class="add">➕ Add New Book</a>
+        <a href="dashboard.php" class="add">⬅ Back to Dashboard</a>
     </div>
 </body>
 

@@ -1,14 +1,14 @@
 <?php
-$servername = "localhost";   // Always localhost in XAMPP
-$username   = "root";        // Default MySQL username
-$password   = "";            // Default MySQL password is empty
-$dbname     = "bookstoredb"; // Your database name
+// Database connection for PageTurn Bookstore System
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+$servername = "localhost";   // or "127.0.0.1:3307" if MySQL runs on port 3307
+$username   = "root";        // default XAMPP user
+$password   = "";            // empty by default
+$dbname     = "bookstoredb"; // make sure this database exists in phpMyAdmin
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+if(!$conn){
+    die("❌ Database Connection Failed: " . mysqli_connect_error());
 }
 ?>

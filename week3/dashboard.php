@@ -1,77 +1,146 @@
 <?php
+include("db_connect.php");
 session_start();
+
 if(!isset($_SESSION['user'])){
     header("Location: login.php");
     exit();
 }
-?>
 
+$result = mysqli_query($conn, "SELECT * FROM books");
+?>
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Dashboard - Bookstore</title>
+    <title>Improved Books – PageTurn</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #1f1c2c, #928dab);
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .dashboard-box {
-            background: rgba(0,0,0,0.6);
-            padding: 40px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0px 0px 20px rgba(255,255,255,0.2);
-            width: 400px;
-        }
-        h2 {
-            margin-bottom: 10px;
-            color: #ffcc00;
-        }
-        p {
-            margin-bottom: 30px;
-            font-size: 16px;
-        }
-        a {
-            display: inline-block;
-            margin: 10px;
-            padding: 12px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        a.view {
-            background: #00c6ff;
-            color: #fff;
-            box-shadow: 0 0 10px #00c6ff;
-        }
-        a.view:hover {
-            background: #0072ff;
-            box-shadow: 0 0 20px #0072ff;
-        }
-        a.logout {
-            background: #ff416c;
-            color: #fff;
-            box-shadow: 0 0 10px #ff416c;
-        }
-        a.logout:hover {
-            background: #ff4b2b;
-            box-shadow: 0 0 20px #ff4b2b;
-        }
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #0072ff, #00c6ff);
+        margin: 0;
+        padding: 0;
+        color: #003366;
+        display: flex;
+    }
+
+    .main {
+        flex: 1;
+        padding: 40px;
+    }
+
+    h1.page-title {
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    /* Table styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(6px);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th,
+    td {
+        padding: 12px;
+        text-align: center;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    th {
+        background: rgba(255, 255, 255, 0.4);
+        font-weight: bold;
+    }
+
+    /* Make titles & authors black and elegant */
+    td:nth-child(2),
+    td:nth-child(3) {
+        color: #000;
+        /* pure black */
+        font-weight: 500;
+        /* medium weight */
+        letter-spacing: 0.5px;
+        /* subtle spacing */
+    }
+
+    /* Low stock styling */
+    .low-stock {
+        background: rgba(255, 193, 7, 0.15);
+        backdrop-filter: blur(6px);
+        color: #b36b00;
+        font-weight: bold;
+        border-left: 4px solid #ffc107;
+    }
+
+    /* Buttons */
+    .delete-btn,
+    .edit-btn {
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .delete-btn {
+        background: #d9534f;
+    }
+
+    .delete-btn:hover {
+        background: #c9302c;
+    }
+
+    .edit-btn {
+        background: #007bff;
+    }
+
+    .edit-btn:hover {
+        background: #0056b3;
+    }
     </style>
 </head>
+
 <body>
-    <div class="dashboard-box">
-        <h2>Welcome, <?php echo $_SESSION['user']; ?>!</h2>
-        <p>You have successfully logged in to the Bookstore system.</p>
-        <!-- Updated link -->
-        <a href="improved_books.php" class="view">📚 View Books</a>
-        <a href="logout.php" class="logout">📕 Logout</a>
+    <?php include "sidebar.php"; ?>
+
+    <div class="main">
+        <h1 class="page-title">📘 Improved Books View</h1>
+
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Genre</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Rating</th>
+                <th>Actions</th>
+            </tr>
+            <?php while($row = mysqli_fetch_assoc($result)): ?>
+            <tr class="<?= (!empty($row['stock']) && $row['stock'] < 10 ? 'low-stock' : '') ?>">
+                <td><?= $row['id'] ?></td>
+                <td><?= $row['title'] ?></td>
+                <td><?= $row['author'] ?></td>
+                <td><?= $row['genre'] ?: '—' ?></td>
+                <td>$<?= number_format($row['price'], 2) ?></td>
+                <td><?= $row['stock'] ?: '—' ?></td>
+                <td><?= $row['rating'] ?: '—' ?></td>
+                <td>
+                    <a href="edit_book.php?id=<?= $row['id'] ?>" class="edit-btn">✏️ Edit</a>
+                    <a href="delete_book.php?id=<?= $row['id'] ?>" class="delete-btn">🗑 Delete</a>
+                </td>
+            </tr>
+            <?php endwhile; ?>
+        </table>
     </div>
 </body>
+
 </html>

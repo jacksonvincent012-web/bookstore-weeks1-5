@@ -1,122 +1,151 @@
-<?php
-session_start();
+                <?php
 include("db_connect.php");
+session_start();
+
+// Block access if not logged in
+if(!isset($_SESSION['user'])){
+    header("Location: login.php");
+    exit();
+}
+
+$results = [];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $search = trim($_POST['search']);
+    if (!empty($search)) {
+        $stmt = $conn->prepare("SELECT * FROM books WHERE title LIKE ? OR author LIKE ?");
+        $like = "%$search%";
+        $stmt->bind_param("ss", $like, $like);
+        $stmt->execute();
+        $results = $stmt->get_result();
+    }
+}
 ?>
-<!DOCTYPE html>
-<html>
+                <!DOCTYPE html>
+                <html>
 
-<head>
-    <title>Search Books</title>
-    <style>
-    body {
-        margin: 0;
-        padding: 0;
-        background-color: #1e1e1e;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        height: 100vh;
-        display: flex;
-    }
+                <head>
+                    <title>Search Books - PageTurn</title>
+                    <style>
+                    body {
+                        font-family: 'Segoe UI', sans-serif;
+                        background: linear-gradient(135deg, #0072ff, #00c6ff);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                        color: #003366;
+                    }
 
-    .sidebar {
-        width: 300px;
-        background-color: #121212;
-        height: 100vh;
-        box-shadow: 0 0 20px #0d6efd;
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-    }
+                    .card {
+                        background: rgba(255, 255, 255, 0.25);
+                        backdrop-filter: blur(12px);
+                        padding: 40px;
+                        border-radius: 16px;
+                        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+                        width: 600px;
+                        text-align: center;
+                    }
 
-    .sidebar li a {
-        display: block;
-        color: #fff;
-        padding: 20px;
-        font-size: 20px;
-        text-decoration: none;
-        border-bottom: 1px solid #333;
-        transition: 0.3s;
-    }
+                    h2 {
+                        margin-bottom: 20px;
+                        font-weight: bold;
+                    }
 
-    .sidebar li a:hover {
-        background-color: #0d6efd;
-        box-shadow: 0 0 15px #0d6efd;
-    }
+                    input {
+                        padding: 12px;
+                        margin: 10px 0;
+                        border: none;
+                        border-radius: 8px;
+                        width: 80%;
+                        background: rgba(255, 255, 255, 0.4);
+                        color: #003366;
+                    }
 
-    .content {
-        flex: 1;
-        padding: 40px;
-    }
+                    button {
+                        padding: 12px 20px;
+                        background: #0072ff;
+                        color: #fff;
+                        border: none;
+                        border-radius: 8px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: 0.3s;
+                    }
 
-    input,
-    button {
-        padding: 12px;
-        margin: 10px 0;
-        border-radius: 8px;
-        border: none;
-        font-size: 16px;
-    }
+                    button:hover {
+                        background: #005fcc;
+                    }
 
-    button {
-        background: #00c6ff;
-        color: #fff;
-        cursor: pointer;
-        box-shadow: 0 0 10px #00c6ff;
-    }
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 20px;
+                        background: rgba(255, 255, 255, 0.4);
+                        border-radius: 8px;
+                        overflow: hidden;
+                    }
 
-    button:hover {
-        background: #0072ff;
-        box-shadow: 0 0 15px #0072ff;
-    }
+                    th,
+                    td {
+                        padding: 12px;
+                        text-align: left;
+                        color: #003366;
+                    }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
+                    th {
+                        background: rgba(255, 255, 255, 0.6);
+                        font-weight: bold;
+                    }
 
-    th,
-    td {
-        border: 1px solid #555;
-        padding: 10px;
-        text-align: left;
-    }
-    </style>
-</head>
+                    tr:nth-child(even) {
+                        background: rgba(255, 255, 255, 0.3);
+                    }
 
-<body>
-    <ul class="sidebar">
-        <li><a href="dashboard.php">📚 Dashboard</a></li>
-        <li><a href="improved_books.php">📖 Books Catalog</a></li>
-        <li><a href="add_book.php">➕ Add Book</a></li>
-        <li><a href="logout.php">📕 Logout</a></li>
-    </ul>
-    <div class="content">
-        <h2>🔍 Search Books</h2>
-        <form method="GET">
-            <input type="text" name="query" placeholder="Enter title or author">
-            <button type="submit">Search</button>
-        </form>
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Author</th>
-            </tr>
-            <?php
-            if(isset($_GET['query'])){
-                $q = "%".$_GET['query']."%";
-                $stmt = $conn->prepare("SELECT * FROM books WHERE title LIKE ? OR author LIKE ?");
-                $stmt->bind_param("ss", $q, $q);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                while($row = $result->fetch_assoc()){
-                    echo "<tr><td>{$row['id']}</td><td>{$row['title']}</td><td>{$row['author']}</td></tr>";
-                }
-            }
-            ?>
-        </table>
-    </div>
-</body>
+                    a {
+                        display: inline-block;
+                        margin-top: 20px;
+                        padding: 12px 20px;
+                        background: #0072ff;
+                        color: white;
+                        border-radius: 8px;
+                        text-decoration: none;
+                        font-weight: bold;
+                        transition: 0.3s;
+                    }
 
-</html>
+                    a:hover {
+                        background: #005fcc;
+                    }
+                    </style>
+                </head>
+
+                <body>
+                    <div class="card">
+                        <h2>🔍 Search Books</h2>
+                        <form method="POST" action="">
+                            <input type="text" name="search" placeholder="Enter title or author">
+                            <button type="submit">Search</button>
+                        </form>
+
+                        <?php if(!empty($results) && $results->num_rows > 0){ ?>
+                        <table>
+                            <tr>
+                                <th>Title</th>
+                                <th>Author</th>
+                            </tr>
+                            <?php while($row = $results->fetch_assoc()){ ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($row['title']); ?></td>
+                                <td><?php echo htmlspecialchars($row['author']); ?></td>
+                            </tr>
+                            <?php } ?>
+                        </table>
+                        <?php } elseif($_SERVER["REQUEST_METHOD"] == "POST") { ?>
+                        <p>⚠️ No books found matching your search.</p>
+                        <?php } ?>
+
+                        <a href="dashboard.php">⬅ Back to Dashboard</a>
+                    </div>
+                </body>
+
+                </html>

@@ -2,74 +2,99 @@
 include("db_connect.php");
 session_start();
 
-// Block access if not logged in
 if(!isset($_SESSION['user'])){
     header("Location: login.php");
     exit();
 }
 
-// Query total books
-$total_books = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM books"))['total'];
-
-// Query most frequent author
-$author = mysqli_fetch_assoc(mysqli_query($conn, "SELECT author, COUNT(*) AS count 
-    FROM books GROUP BY author ORDER BY count DESC LIMIT 1"));
+// Fetch data
+$totalBooks = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS count FROM books"))['count'];
+$mostAuthor = mysqli_fetch_assoc(mysqli_query($conn, "SELECT author, COUNT(*) AS count FROM books GROUP BY author ORDER BY count DESC LIMIT 1"));
+$totalRevenue = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(price * stock) AS revenue FROM books"))['revenue'];
+$topBook = mysqli_fetch_assoc(mysqli_query($conn, "SELECT title, rating FROM books ORDER BY rating DESC LIMIT 1"));
+$lowStock = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS low FROM books WHERE stock < 5"))['low'];
+$genres = mysqli_query($conn, "SELECT genre, COUNT(*) AS count FROM books GROUP BY genre");
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Reports - Bookstore</title>
+    <title>Reports - PageTurn</title>
     <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #141e30, #243b55);
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .report-box {
-            background: rgba(0,0,0,0.7);
-            padding: 40px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0px 0px 20px rgba(0,255,255,0.4);
-            width: 400px;
-        }
-        h2 {
-            margin-bottom: 20px;
-            color: #00c6ff;
-            text-shadow: 0 0 10px #00c6ff;
-        }
-        p {
-            font-size: 18px;
-            margin: 15px 0;
-        }
-        a {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 20px;
-            background: #00c6ff;
-            color: white;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            box-shadow: 0 0 10px #00c6ff;
-            transition: 0.3s;
-        }
-        a:hover {
-            background: #0072ff;
-            box-shadow: 0 0 20px #0072ff;
-        }
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #0072ff, #00c6ff);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: #003366;
+        margin: 0;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(12px);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        width: 700px;
+        text-align: center;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .metric {
+        margin: 10px 0;
+        font-size: 18px;
+    }
+
+    .genre {
+        text-align: left;
+        margin-top: 20px;
+    }
+
+    a.back {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 20px;
+        background: #0072ff;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    a.back:hover {
+        background: #005fcc;
+    }
     </style>
 </head>
+
 <body>
-    <div class="report-box">
+    <div class="card">
         <h2>📊 Reports</h2>
-        <p>Total Books: <?php echo $total_books; ?></p>
-        <p>Most Frequent Author: <?php echo $author['author']; ?> (<?php echo $author['count']; ?> books)</p>
-        <a href="dashboard.php">⬅ Back to Dashboard</a>
+        <div class="metric">Total Books: <?= $totalBooks ?></div>
+        <div class="metric">Most Frequent Author: <?= htmlspecialchars($mostAuthor['author']) ?>
+            (<?= $mostAuthor['count'] ?> books)</div>
+        <div class="metric">Total Revenue: $<?= number_format($totalRevenue, 2) ?></div>
+        <div class="metric">Top Rated Book: <?= htmlspecialchars($topBook['title']) ?> (⭐ <?= $topBook['rating'] ?>)
+        </div>
+        <div class="metric">Low Stock Alerts: <?= $lowStock ?> books</div>
+
+        <div class="genre">
+            <h3>📚 Genre Breakdown</h3>
+            <?php while($g = mysqli_fetch_assoc($genres)){ ?>
+            <div><?= htmlspecialchars($g['genre']) ?>: <?= $g['count'] ?> books</div>
+            <?php } ?>
+        </div>
+
+        <a href="dashboard.php" class="back">⬅ Back to Dashboard</a>
     </div>
 </body>
+
 </html>
