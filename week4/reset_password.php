@@ -30,12 +30,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'yourgmail@gmail.com'; // replace
-            $mail->Password = 'your_app_password';   // Gmail App Password
+            $mail->Username = getenv("GMAIL_USER");     // stored in .env
+            $mail->Password = getenv("GMAIL_PASS");     // stored in .env
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
 
-            $mail->setFrom('yourgmail@gmail.com', 'PageTurn');
+            $mail->setFrom(getenv("GMAIL_USER"), 'PageTurn');
             $mail->addAddress($email);
             $mail->Subject = 'Password Reset';
             $mail->Body = "Click here to reset your password: $resetLink";
@@ -54,16 +54,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $_SESSION['otp'] = $otp;
         $_SESSION['phone'] = $phone;
 
-        $account_sid = "AC05bca6dc950b798f46bba75ed9bdf821";
-        $auth_token  = "824c6744cc0d177bd399fa12fb26eaed";
-        $twilio_number = "+254110869425"; // Twilio sender
+        // 🔒 Secrets now loaded from environment
+        $account_sid   = getenv("TWILIO_ACCOUNT_SID");
+        $auth_token    = getenv("TWILIO_AUTH_TOKEN");
+        $twilio_number = getenv("TWILIO_NUMBER");
 
         try {
             $client = new Client($account_sid, $auth_token);
 
-            // ✅ Send OTP to your Safaricom line
             $client->messages->create(
-                "+254708208135", // recipient (your line)
+                $phone, // recipient entered by user
                 [
                     'from' => $twilio_number,
                     'body' => "Your PageTurn OTP code is: $otp"
@@ -76,98 +76,3 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
 }
 ?>
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Reset Password - PageTurn</title>
-    <style>
-    body {
-        font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #0072ff, #00c6ff);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        color: #003366;
-    }
-
-    .card {
-        background: rgba(255, 255, 255, 0.25);
-        backdrop-filter: blur(12px);
-        padding: 40px;
-        border-radius: 16px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-        width: 380px;
-        text-align: center;
-    }
-
-    h2 {
-        margin-bottom: 20px;
-        color: #003366;
-        font-weight: bold;
-    }
-
-    input {
-        padding: 12px;
-        margin: 10px 0;
-        border: none;
-        border-radius: 8px;
-        width: 90%;
-        background: rgba(255, 255, 255, 0.4);
-        color: #003366;
-    }
-
-    button {
-        padding: 12px 20px;
-        background: #0072ff;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.3s;
-        width: 95%;
-    }
-
-    button:hover {
-        background: #005fcc;
-    }
-
-    .success {
-        color: #28a745;
-        margin-top: 10px;
-        font-weight: bold;
-    }
-
-    .error {
-        color: #ff4d4d;
-        margin-top: 10px;
-        font-weight: bold;
-    }
-    </style>
-</head>
-
-<body>
-    <div class="card">
-        <h2>🔑 Reset Password</h2>
-        <form method="POST" action="">
-            <input type="email" name="email" placeholder="Enter your email"><br>
-            <button type="submit">Send Reset Link</button>
-        </form>
-        <hr style="margin:20px 0; border:0; border-top:1px solid #ccc;">
-        <form method="POST" action="">
-            <input type="text" name="phone" placeholder="Enter your phone number"><br>
-            <button type="submit">Send OTP</button>
-        </form>
-        <?php 
-        if(isset($success)) echo "<p class='success'>$success</p>"; 
-        if(isset($error)) echo "<p class='error'>$error</p>"; 
-        ?>
-        <div class="links">
-            <a href="login.php">⬅ Back to Login</a>
-        </div>
-    </div>
-</body>
-
-</html>
