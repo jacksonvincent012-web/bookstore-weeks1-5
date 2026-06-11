@@ -6,7 +6,7 @@
 
 ## 👨‍🏫 Lecturer Details
 - **Lecturer:** Mr. Nyoro Michael
-- 
+
 
 # 📚 Bookstore Management System (Weeks 1–5)
 
