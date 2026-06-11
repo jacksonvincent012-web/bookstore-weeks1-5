@@ -17,6 +17,13 @@
 A step‑by‑step PHP + MySQL project developed across five weeks, demonstrating database design, CRUD operations, UI consistency, and reporting.
 
 ---
+## 🛠️ Languages & Technologies Used
+- **PHP** → Backend logic and CRUD operations  
+- **MySQL** → Database design and queries  
+- **HTML** → Structure of web pages  
+- **CSS** → Styling and UI consistency  
+- **JavaScript** → Interactivity and form validation  
+
 
 ## 🗂 Project Structure
 - **Week 1** → Setup + ER diagram + database schema  
