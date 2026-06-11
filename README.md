@@ -1,3 +1,16 @@
+## 👨‍🎓 Student Details
+- **Name:** Vincent Ochieng  
+- **Admission Number:** BBIT/2024/74754  
+- **Course:** Bachelor of Business Information Technology  
+- **Unit Code & Name:** BIT 3208 – Advanced Web Design  
+
+## 👨‍🏫 Lecturer Details
+- **Lecturer:** Mr. Nyoro Michael  
+
+
+
+
+
 # bookstore-weeks1-5
 # 📚 Bookstore Management System (Weeks 1–5)
 
