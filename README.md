@@ -5,7 +5,8 @@
 - **Unit Code & Name:** BIT 3208 – Advanced Web Design  
 
 ## 👨‍🏫 Lecturer Details
-- **Lecturer:** Mr. Nyoro Michael  
+- **Lecturer:** Mr. Nyoro Michael
+- 
 
 # 📚 Bookstore Management System (Weeks 1–5)
 
