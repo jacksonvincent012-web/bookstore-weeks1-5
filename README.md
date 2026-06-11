@@ -7,38 +7,34 @@
 ## 👨‍🏫 Lecturer Details
 - **Lecturer:** Mr. Nyoro Michael  
 
-
-
-
-
-# bookstore-weeks1-5
 # 📚 Bookstore Management System (Weeks 1–5)
 
-A step‑by‑step PHP + MySQL project developed across five weeks, demonstrating database design, CRUD operations, UI consistency, and reporting.
+This repository documents the development of a Bookstore Management System completed over five weeks. The project demonstrates practical application of PHP and MySQL in database design, CRUD operations, authentication, reporting, and user interface consistency.
 
 ---
+
 ## 🛠️ Languages & Technologies Used
-- **PHP** → Backend logic and CRUD operations  
-- **MySQL** → Database design and queries  
-- **HTML (embedded in PHP)** → Page structure written inside `.php` files  
-- **CSS** → Styling and UI consistency  
-- **JavaScript (embedded in PHP)** → Interactivity and form validation within `.php` files  
+- **PHP** – Backend development and CRUD functionality  
+- **MySQL** – Database schema design and query execution  
+- **HTML (embedded within PHP)** – Page structure integrated into `.php` files  
+- **CSS** – Styling for layout and user interface consistency  
+- **JavaScript (embedded within PHP)** – Interactive features and form validation  
 
-📌 Note: GitHub Linguist detects mainly **PHP and CSS** because HTML and JavaScript are embedded inside `.php` files, not stored separately as `.html` or `.js`.
+*Note: GitHub’s language statistics primarily display PHP and CSS because HTML and JavaScript are embedded within PHP files rather than stored separately as `.html` or `.js` documents.*
 
-
+---
 
 ## 🗂 Project Structure
-- **Week 1** → Setup + ER diagram + database schema  
-- **Week 2** → Database connection + login system  
-- **Week 3** → CRUD operations (Add, Edit, Delete, View books)  
-- **Week 4** → UI improvements + search + reports + user management  
-- **Week 5** → Full integration + role checks + styled dashboard  
+- **Week 1** – Environment setup, ER diagram, and database schema  
+- **Week 2** – Database connection and login system  
+- **Week 3** – CRUD operations (Add, Edit, Delete, View books)  
+- **Week 4** – UI improvements, search functionality, reporting, and user management  
+- **Week 5** – Full system integration, role checks, and styled dashboard  
 
 ---
 
 ## 🚀 How to Run Locally
 1. Install [XAMPP](ca://s?q=How_to_install_XAMPP) and start Apache + MySQL.  
-2. Clone this repo into your `htdocs` folder:
+2. Clone this repository into your `htdocs` folder:
    ```bash
    git clone https://github.com/jacksonvincent012-web/bookstore-weeks1-5.git
