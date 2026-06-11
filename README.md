@@ -20,9 +20,12 @@ A step‑by‑step PHP + MySQL project developed across five weeks, demonstratin
 ## 🛠️ Languages & Technologies Used
 - **PHP** → Backend logic and CRUD operations  
 - **MySQL** → Database design and queries  
-- **HTML** → Structure of web pages  
+- **HTML (embedded in PHP)** → Page structure written inside `.php` files  
 - **CSS** → Styling and UI consistency  
-- **JavaScript** → Interactivity and form validation  
+- **JavaScript (embedded in PHP)** → Interactivity and form validation within `.php` files  
+
+📌 Note: GitHub Linguist detects mainly **PHP and CSS** because HTML and JavaScript are embedded inside `.php` files, not stored separately as `.html` or `.js`.
+
 
 
 ## 🗂 Project Structure
