@@ -12,6 +12,8 @@
 
 This repository documents the development of a Bookstore Management System completed over five weeks. The project demonstrates practical application of PHP and MySQL in database design, CRUD operations, authentication, reporting, and user interface consistency.
 
+<img width="1920" height="1032" alt="Screenshot 2026-06-09 091823" src="https://github.com/user-attachments/assets/0a9cd3bb-c345-44a0-b4ba-bf77279c5727" />
+
 ---
 
 ## 🛠️ Languages & Technologies Used
