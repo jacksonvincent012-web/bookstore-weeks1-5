@@ -23,9 +23,11 @@ This repository documents the development of a Bookstore Management System compl
 - **CSS** – Styling for layout and user interface consistency  
 - **JavaScript (embedded within PHP)** – Interactive features and form validation  
 
-*Note: GitHub’s language statistics primarily display PHP and CSS because HTML and JavaScript are embedded within PHP files rather than stored separately as `.html` or `.js` documents.*
+📌 Note on Languages Used
 
----
+My project utilizes **PHP, MySQL, HTML, CSS, and JavaScript**.  
+However, GitHub’s language statistics primarily display **PHP and CSS** because the other languages have been **embedded within PHP files** rather than stored separately as `.html` or `.js` documents.  
+
 
 ## 🗂 Project Structure
 - **Week 1** – Environment setup, ER diagram, and database schema  
