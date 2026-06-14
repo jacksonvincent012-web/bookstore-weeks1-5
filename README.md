@@ -1,14 +1,14 @@
-## 👨‍🎓 Student Details
+##  Student Details
 - **Name:** Vincent Ochieng  
 - **Admission Number:** BBIT/2024/74754  
 - **Course:** Bachelor of Business Information Technology  
 - **Unit Code & Name:** BIT 3208 – Advanced Web Design  
 
-## 👨‍🏫 Lecturer Details
+## Lecturer Details
 - **Lecturer:** Mr. Nyoro Michael
 
 
-# 📚 Bookstore Management System (Weeks 1–5)
+#  Bookstore Management System (Weeks 1–5)
 
 This repository documents the development of a Bookstore Management System completed over five weeks. The project demonstrates practical application of PHP and MySQL in database design, CRUD operations, authentication, reporting, and user interface consistency.
 
@@ -16,14 +16,14 @@ This repository documents the development of a Bookstore Management System compl
 
 ---
 
-## 🛠️ Languages & Technologies Used
+##  Languages & Technologies Used
 - **PHP** – Backend development and CRUD functionality  
 - **MySQL** – Database schema design and query execution  
 - **HTML (embedded within PHP)** – Page structure integrated into `.php` files  
 - **CSS** – Styling for layout and user interface consistency  
 - **JavaScript (embedded within PHP)** – Interactive features and form validation  
 
-📌 Note on Languages Used
+ Note on Languages Used
 
 My project utilizes **PHP, MySQL, HTML, CSS, and JavaScript**.  
 However, GitHub’s language statistics primarily display **PHP and CSS** because the other languages have been **embedded within PHP files** rather than stored separately as `.html` or `.js` documents.  
@@ -38,7 +38,7 @@ However, GitHub’s language statistics primarily display **PHP and CSS** becaus
 
 ---
 
-## 🚀 How to Run Locally
+##  How to Run Locally
 1. Install [XAMPP](ca://s?q=How_to_install_XAMPP) and start Apache + MySQL.  
 2. Clone this repository into your `htdocs` folder:
    ```bash
