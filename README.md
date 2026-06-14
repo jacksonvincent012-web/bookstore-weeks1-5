@@ -29,7 +29,7 @@ My project utilizes **PHP, MySQL, HTML, CSS, and JavaScript**.
 However, GitHub’s language statistics primarily display **PHP and CSS** because the other languages have been **embedded within PHP files** rather than stored separately as `.html` or `.js` documents.  
 
 
-## 🗂 Project Structure
+##  Project Structure
 - **Week 1** – Environment setup, ER diagram, and database schema  
 - **Week 2** – Database connection and login system  
 - **Week 3** – CRUD operations (Add, Edit, Delete, View books)  
