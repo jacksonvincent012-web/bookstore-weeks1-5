@@ -1,0 +1,17 @@
+# XAMPP default files
+dashboard/
+xampp/
+favicon.ico
+applications.html
+bitnami.css
+img/
+
+# Composer vendor (Twilio, PHPMailer)
+week4/vendor/
+
+# IDE
+.vscode/
+
+# Temp
+.DS_Store
+Thumbs.db
