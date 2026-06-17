@@ -1,7 +1,7 @@
-# Week 1 - Setup + ER Diagram + Database Schema
+# Week 1 - Setup + ER diagram + database schema
 
 ## Contents
-- **Database schema** (`bookstoredb`): initial tables design
-- **ER diagram**: entity-relationship model for the bookstore
-- **Logbook**: project documentation and progress tracking
-- **Screenshots**: setup and schema evidence
+- Database schema (bookstoredb): initial tables design
+- ER diagram: entity-relationship model
+- Logbook: project documentation and progress tracking
+- Screenshots: setup and schema evidence
