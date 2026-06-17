@@ -7,7 +7,7 @@ Course: Bachelor of Business Information Technology
 
 Unit Code & Name: BIT 3208 – Advanced Web Design
 
- Lecturer 
+ Lecturer; 
  Mr. Nyoro Michael
 
 # PageTurn Bookstore Management System
