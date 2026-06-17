@@ -42,7 +42,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['place_order'])){
     }
 }
 
-$orders_result = mysqli_query($conn, "SELECT o.id, u.username, o.total_amount, o.status, o.created_at FROM orders o JOIN users u ON o.user_id = u.id ORDER BY o.created_at DESC");
+$orders_result = mysqli_query($conn, "SELECT o.id, u.username, o.total_amount, o.status, o.order_date FROM orders o JOIN users u ON o.user_id = u.id ORDER BY o.order_date DESC");
 $books_list = mysqli_query($conn, "SELECT id, title, price, stock FROM books WHERE stock > 0");
 ?>
 <!DOCTYPE html>
@@ -192,7 +192,7 @@ $books_list = mysqli_query($conn, "SELECT id, title, price, stock FROM books WHE
                 <td><?= htmlspecialchars($o['username']) ?></td>
                 <td>$<?= number_format($o['total_amount'], 2) ?></td>
                 <td><?= $o['status'] ?></td>
-                <td><?= $o['created_at'] ?></td>
+                <td><?= $o['order_date'] ?></td>
             </tr>
             <?php } } else { ?>
             <tr><td colspan="5">No orders yet.</td></tr>
