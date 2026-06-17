@@ -111,7 +111,7 @@ $result = mysqli_query($conn, "SELECT * FROM books");
     <?php include "sidebar.php"; ?>
 
     <div class="main">
-        <h1 class="page-title">📘 Improved Books View</h1>
+        <h1 class="page-title"> Improved Books View</h1>
 
         <table>
             <tr>
@@ -134,8 +134,8 @@ $result = mysqli_query($conn, "SELECT * FROM books");
                 <td><?= $row['stock'] ?: '—' ?></td>
                 <td><?= $row['rating'] ?: '—' ?></td>
                 <td>
-                    <a href="edit_book.php?id=<?= $row['id'] ?>" class="edit-btn">✏️ Edit</a>
-                    <a href="delete_book.php?id=<?= $row['id'] ?>" class="delete-btn">🗑 Delete</a>
+                    <a href="edit_book.php?id=<?= $row['id'] ?>" class="edit-btn"> Edit</a>
+                    <a href="delete_book.php?id=<?= $row['id'] ?>" class="delete-btn"> Delete</a>
                 </td>
             </tr>
             <?php endwhile; ?>

@@ -8,7 +8,7 @@ if(!isset($_SESSION['user'])){
 }
 
 if(!isset($_GET['id'])){
-    die("❌ No book ID provided.");
+    die(" No book ID provided.");
 }
 
 $id = intval($_GET['id']); // safer
@@ -16,7 +16,7 @@ $sql = "SELECT * FROM books WHERE id=$id";
 $result = mysqli_query($conn, $sql);
 
 if(!$result || mysqli_num_rows($result) == 0){
-    die("❌ Book not found.");
+    die(" Book not found.");
 }
 
 $book = mysqli_fetch_assoc($result);
@@ -37,7 +37,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         header("Location: improved_books.php?updated=1");
         exit();
     } else {
-        $error = "❌ Error updating book: " . mysqli_error($conn);
+        $error = " Error updating book: " . mysqli_error($conn);
     }
 }
 ?>
@@ -54,7 +54,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <?php include "sidebar.php"; ?>
 
     <div class="main">
-        <h1 class="page-title">✏️ Edit Book</h1>
+        <h1 class="page-title"> Edit Book</h1>
 
         <form method="POST" class="form-card">
             <label>Title</label>

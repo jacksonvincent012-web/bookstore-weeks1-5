@@ -1,11 +1,11 @@
 <div class="sidebar">
-    <h2>📚 PageTurn</h2>
+    <h2> PageTurn</h2>
 
-    <a href="dashboard.php" class="active">🏠 Dashboard</a>
-    <a href="books.php">📖 Books Catalog</a>
-    <a href="add_book.php">➕ Add Book</a>
-    <a href="reports.php">📊 Reports</a>
-    <a href="logout.php">🚪 Logout</a>
+    <a href="dashboard.php" class="active"> Dashboard</a>
+    <a href="books.php"> Books Catalog</a>
+    <a href="add_book.php"> Add Book</a>
+    <a href="reports.php"> Reports</a>
+    <a href="logout.php"> Logout</a>
 </div>
 
 <style>

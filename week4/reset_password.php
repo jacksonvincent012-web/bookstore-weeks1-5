@@ -14,7 +14,7 @@ use Twilio\Rest\Client;
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(!empty($_POST['email'])){
-        // ✅ Email reset flow
+        //  Email reset flow
         $email = $_POST['email'];
         $token = bin2hex(random_bytes(50));
         $expires = date("Y-m-d H:i:s", strtotime("+1 hour"));
@@ -41,20 +41,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $mail->Body = "Click here to reset your password: $resetLink";
 
             $mail->send();
-            $success = "✅ Reset link sent to your email!";
+            $success = " Reset link sent to your email!";
         } catch (Exception $e) {
-            $error = "❌ Email could not be sent. Error: {$mail->ErrorInfo}";
+            $error = " Email could not be sent. Error: {$mail->ErrorInfo}";
         }
     }
     elseif(!empty($_POST['phone'])){
-        // ✅ Phone OTP flow
+        //  Phone OTP flow
         $phone = $_POST['phone'];
         $otp = rand(100000, 999999);
 
         $_SESSION['otp'] = $otp;
         $_SESSION['phone'] = $phone;
 
-        // 🔒 Secrets now loaded from environment
+        //  Secrets now loaded from environment
         $account_sid   = getenv("TWILIO_ACCOUNT_SID");
         $auth_token    = getenv("TWILIO_AUTH_TOKEN");
         $twilio_number = getenv("TWILIO_NUMBER");
@@ -69,9 +69,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     'body' => "Your PageTurn OTP code is: $otp"
                 ]
             );
-            $success = "📱 OTP sent to your phone!";
+            $success = " OTP sent to your phone!";
         } catch (Exception $e) {
-            $error = "❌ OTP could not be sent. Error: {$e->getMessage()}";
+            $error = " OTP could not be sent. Error: {$e->getMessage()}";
         }
     }
 }

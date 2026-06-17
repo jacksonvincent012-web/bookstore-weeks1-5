@@ -21,7 +21,7 @@ if(isset($_POST['confirm'])){
         header("Location: books.php?deleted=1");
         exit();
     } else {
-        $error = "❌ Error deleting book: " . mysqli_error($conn);
+        $error = " Error deleting book: " . mysqli_error($conn);
     }
 }
 ?>
@@ -38,13 +38,13 @@ if(isset($_POST['confirm'])){
     <?php include "sidebar.php"; ?>
 
     <div class="main">
-        <h1 class="page-title">🗑 Delete Book</h1>
+        <h1 class="page-title"> Delete Book</h1>
 
         <div class="card" style="width:50%; padding:30px;">
             <h2>Are you sure?</h2>
             <p>You are about to delete:</p>
 
-            <strong>📘 <?= $book['title'] ?></strong><br>
+            <strong> <?= $book['title'] ?></strong><br>
             <small>by <?= $book['author'] ?></small><br>
             <small>Genre: <?= $book['genre'] ?> | Price: $<?= $book['price'] ?> | Stock: <?= $book['stock'] ?> | Rating:
                 <?= $book['rating'] ?></small>

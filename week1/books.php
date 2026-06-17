@@ -24,9 +24,9 @@ $result = mysqli_query($conn, "SELECT * FROM books");
 
     <div class="main">
 
-        <h1 class="page-title">📚 Books</h1>
+        <h1 class="page-title"> Books</h1>
 
-        <a href="add_book.php" class="btn">➕ Add Book</a>
+        <a href="add_book.php" class="btn"> Add Book</a>
 
         <table>
             <tr>

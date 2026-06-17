@@ -70,15 +70,15 @@ $result = mysqli_query($conn, "SELECT * FROM books");
     <?php include "sidebar.php"; ?>
 
     <div class="main">
-        <h1 class="page-title">📘 Improved Books View</h1>
+        <h1 class="page-title"> Improved Books View</h1>
 
         <!-- Feedback banners -->
         <?php if(isset($_GET['deleted'])): ?>
-        <p class="success-msg">✅ Book deleted successfully!</p>
+        <p class="success-msg"> Book deleted successfully!</p>
         <?php elseif(isset($_GET['updated'])): ?>
-        <p class="info-msg">✏️ Book updated successfully!</p>
+        <p class="info-msg"> Book updated successfully!</p>
         <?php elseif(isset($_GET['success'])): ?>
-        <p class="success-msg">➕ Book added successfully!</p>
+        <p class="success-msg"> Book added successfully!</p>
         <?php endif; ?>
 
         <table>
@@ -103,8 +103,8 @@ $result = mysqli_query($conn, "SELECT * FROM books");
                 <td><?= $row['stock'] ?></td>
                 <td><?= $row['rating'] ?></td>
                 <td>
-                    <a href="edit_book.php?id=<?= $row['id'] ?>" class="edit-btn">✏️ Edit</a>
-                    <a href="delete_book.php?id=<?= $row['id'] ?>" class="delete-btn">🗑 Delete</a>
+                    <a href="edit_book.php?id=<?= $row['id'] ?>" class="edit-btn"> Edit</a>
+                    <a href="delete_book.php?id=<?= $row['id'] ?>" class="delete-btn"> Delete</a>
                 </td>
             </tr>
             <?php endwhile; ?>

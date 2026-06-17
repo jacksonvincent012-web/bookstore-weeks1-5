@@ -19,10 +19,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             header("Location: dashboard.php");
             exit();
         } else {
-            $error = "⚠️ Invalid password!";
+            $error = " Invalid password!";
         }
     } else {
-        $error = "⚠️ User not found!";
+        $error = " User not found!";
     }
 }
 ?>
@@ -91,7 +91,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 <body>
     <div class="login-box">
-        <h2>🔑 Login</h2>
+        <h2> Login</h2>
         <form method="POST" action="">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>

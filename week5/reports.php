@@ -77,23 +77,23 @@ $genres = mysqli_query($conn, "SELECT genre, COUNT(*) AS count FROM books GROUP 
 
 <body>
     <div class="card">
-        <h2>📊 Reports</h2>
+        <h2> Reports</h2>
         <div class="metric">Total Books: <?= $totalBooks ?></div>
         <div class="metric">Most Frequent Author: <?= htmlspecialchars($mostAuthor['author']) ?>
             (<?= $mostAuthor['count'] ?> books)</div>
         <div class="metric">Total Revenue: $<?= number_format($totalRevenue, 2) ?></div>
-        <div class="metric">Top Rated Book: <?= htmlspecialchars($topBook['title']) ?> (⭐ <?= $topBook['rating'] ?>)
+        <div class="metric">Top Rated Book: <?= htmlspecialchars($topBook['title']) ?> ( <?= $topBook['rating'] ?>)
         </div>
         <div class="metric">Low Stock Alerts: <?= $lowStock ?> books</div>
 
         <div class="genre">
-            <h3>📚 Genre Breakdown</h3>
+            <h3> Genre Breakdown</h3>
             <?php while($g = mysqli_fetch_assoc($genres)){ ?>
             <div><?= htmlspecialchars($g['genre']) ?>: <?= $g['count'] ?> books</div>
             <?php } ?>
         </div>
 
-        <a href="dashboard.php" class="back">⬅ Back to Dashboard</a>
+        <a href="dashboard.php" class="back"> Back to Dashboard</a>
     </div>
 </body>
 
