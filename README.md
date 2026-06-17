@@ -1,3 +1,15 @@
+ Student Details
+Name: Vincent Ochieng
+
+Admission Number: BBIT/2024/74754
+
+Course: Bachelor of Business Information Technology
+
+Unit Code & Name: BIT 3208 – Advanced Web Design
+
+ Lecturer Details
+Lecturer: Mr. Nyoro Michael
+
 # PageTurn Bookstore Management System
 <img width="1920" height="1032" alt="Screenshot 2026-06-17 111934" src="https://github.com/user-attachments/assets/9580a12d-b6b6-4e9b-b81b-ab6c30c2fe25" />
 
