@@ -2,27 +2,33 @@
 session_start();
 include("db_connect.php");
 
+$error = "";
+
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    $username = $_POST['username'];
+    $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT * FROM users WHERE username=? LIMIT 1");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if($result->num_rows == 1){
-        $row = $result->fetch_assoc();
-        if(password_verify($password, $row['password'])){
-            $_SESSION['user'] = $row['username'];
-            $_SESSION['role'] = $row['role'];
-            header("Location: dashboard.php");
-            exit();
-        } else {
-            $error = "Invalid password!";
-        }
+    if(empty($username) || empty($password)){
+        $error = "Please enter username and password.";
     } else {
-        $error = "User not found!";
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username=? LIMIT 1");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if($result->num_rows == 1){
+            $row = $result->fetch_assoc();
+            if(password_verify($password, $row['password'])){
+                $_SESSION['user'] = $row['username'];
+                $_SESSION['role'] = $row['role'];
+                header("Location: dashboard.php");
+                exit();
+            } else {
+                $error = "Invalid password!";
+            }
+        } else {
+            $error = "User not found!";
+        }
     }
 }
 ?>
@@ -40,6 +46,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         align-items: center;
         height: 100vh;
         margin: 0;
+        color: #003366;
     }
 
     .login-box {
@@ -49,12 +56,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         border-radius: 10px;
         box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
         width: 300px;
+        text-align: center;
     }
 
     h2 {
         margin-bottom: 20px;
-        color: #fff;
-        text-align: center;
+        font-weight: bold;
     }
 
     input {
@@ -82,10 +89,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
 
     .error {
-        color: red;
+        color: #ff4d4d;
         font-size: 0.9em;
         margin-top: 5px;
-        text-align: center;
+    }
+
+    a {
+        color: #0072ff;
+        display: block;
+        margin-top: 12px;
     }
     </style>
 </head>
@@ -93,12 +105,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <body>
     <div class="login-box">
         <h2>Login</h2>
+        <?php if($error) echo "<p class='error'>$error</p>"; ?>
         <form method="POST" action="">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
-            <div class="error"><?php if(isset($error)) echo $error; ?></div>
             <button type="submit">Login</button>
         </form>
+        <a href="register.php">Create an account</a>
     </div>
 </body>
 

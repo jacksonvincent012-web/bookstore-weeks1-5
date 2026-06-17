@@ -1,0 +1,5 @@
+-- Week 7: Authentication & Security
+-- Changes applied to all users' passwords (hashed with bcrypt)
+-- Added register.php with password_hash() + email validation
+-- Updated login.php to use password_verify()
+-- All passwords in users table now stored as bcrypt hashes
