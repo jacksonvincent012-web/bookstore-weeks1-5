@@ -1,4 +1,4 @@
-# Week 2 - Database Connection + Login System
+# Week 2 - Database connection + login system
 
 ## Contents
 - `db_connect.php` — MySQL database connection
