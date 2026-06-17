@@ -7,129 +7,200 @@ if(!isset($_SESSION['user'])){
     exit();
 }
 
-$userId = null;
-$userResult = mysqli_query($conn, "SELECT id FROM users WHERE username='" . $_SESSION['user'] . "'");
-if($userRow = $userResult->fetch_assoc()){
-    $userId = $userRow['id'];
-}
+$message = "";
+$error = "";
 
-// Handle new order
-if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['book_id'])){
-    $bookId = intval($_POST['book_id']);
+if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['place_order'])){
+    $book_id = intval($_POST['book_id']);
     $quantity = intval($_POST['quantity']);
-    if($quantity < 1) $quantity = 1;
+    $user_id = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id FROM users WHERE username='" . $_SESSION['user'] . "'"))['id'];
 
-    $bookStmt = $conn->prepare("SELECT price, stock FROM books WHERE id = ?");
-    $bookStmt->bind_param("i", $bookId);
-    $bookStmt->execute();
-    $book = $bookStmt->get_result()->fetch_assoc();
-
-    if($book && $book['stock'] >= $quantity){
-        $total = $book['price'] * $quantity;
-
-        $conn->begin_transaction();
-        try {
-            $orderStmt = $conn->prepare("INSERT INTO orders (user_id, total_amount, status) VALUES (?, ?, 'pending')");
-            $orderStmt->bind_param("id", $userId, $total);
-            $orderStmt->execute();
-            $orderId = $conn->insert_id;
-
-            $itemStmt = $conn->prepare("INSERT INTO order_items (order_id, book_id, quantity, price) VALUES (?, ?, ?, ?)");
-            $itemStmt->bind_param("iiid", $orderId, $bookId, $quantity, $book['price']);
-            $itemStmt->execute();
-
-            $updateStmt = $conn->prepare("UPDATE books SET stock = stock - ? WHERE id = ?");
-            $updateStmt->bind_param("ii", $quantity, $bookId);
-            $updateStmt->execute();
-
-            $conn->commit();
-            $success = "Order placed successfully!";
-        } catch(Exception $e){
-            $conn->rollback();
-            $error = "Order failed: " . $e->getMessage();
-        }
+    if($quantity < 1){
+        $error = "Quantity must be at least 1.";
     } else {
-        $error = "Insufficient stock.";
+        $book = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM books WHERE id=$book_id"));
+
+        if(!$book){
+            $error = "Book not found.";
+        } elseif($book['stock'] < $quantity){
+            $error = "Insufficient stock. Available: " . $book['stock'];
+        } else {
+            mysqli_begin_transaction($conn);
+            try {
+                $total = $book['price'] * $quantity;
+                mysqli_query($conn, "INSERT INTO orders (user_id, total_amount, status) VALUES ($user_id, $total, 'pending')");
+                $order_id = mysqli_insert_id($conn);
+                mysqli_query($conn, "INSERT INTO order_items (order_id, book_id, quantity, price) VALUES ($order_id, $book_id, $quantity, {$book['price']})");
+                mysqli_query($conn, "UPDATE books SET stock = stock - $quantity WHERE id = $book_id");
+                mysqli_commit($conn);
+                $message = "Order placed successfully! Order #$order_id";
+            } catch(Exception $e){
+                mysqli_rollback($conn);
+                $error = "Order failed: " . $e->getMessage();
+            }
+        }
     }
 }
 
-// Fetch orders
-$orders = $conn->prepare("SELECT o.id, o.order_date, o.total_amount, o.status, u.username FROM orders o JOIN users u ON o.user_id = u.id ORDER BY o.order_date DESC");
-$orders->execute();
-$ordersResult = $orders->get_result();
-
-// Fetch books for order form
-$books = mysqli_query($conn, "SELECT id, title, price, stock FROM books WHERE stock > 0");
+$orders_result = mysqli_query($conn, "SELECT o.id, u.username, o.total_amount, o.status, o.created_at FROM orders o JOIN users u ON o.user_id = u.id ORDER BY o.created_at DESC");
+$books_list = mysqli_query($conn, "SELECT id, title, price, stock FROM books WHERE stock > 0");
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Orders - PageTurn</title>
     <style>
     body {
         font-family: 'Segoe UI', sans-serif;
         background: linear-gradient(135deg, #0072ff, #00c6ff);
-        margin: 0; padding: 0; color: #003366; display: flex;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        color: #003366;
+        margin: 0;
+        padding: 40px;
     }
-    .main { flex: 1; padding: 40px; margin-left: 260px; }
-    h1 { text-align: center; margin-bottom: 30px; }
+
     .card {
-        background: rgba(255,255,255,0.25); backdrop-filter: blur(12px);
-        padding: 20px; border-radius: 16px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2); margin-bottom: 20px;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(12px);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        width: 800px;
+        text-align: center;
     }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.3); }
-    th { background: rgba(255,255,255,0.3); }
-    select, input, button {
-        padding: 10px; margin: 5px; border: none; border-radius: 6px;
+
+    h2 {
+        margin-bottom: 20px;
+        font-weight: bold;
     }
-    button { background: #0072ff; color: #fff; font-weight: bold; cursor: pointer; }
-    button:hover { background: #005fcc; }
-    .success { color: #28a745; font-weight: bold; }
-    .error { color: #ff4d4d; font-weight: bold; }
+
+    select, input {
+        padding: 12px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 8px;
+        width: 90%;
+        background: rgba(255, 255, 255, 0.4);
+        color: #003366;
+    }
+
+    button {
+        padding: 12px 20px;
+        background: #0072ff;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        width: 95%;
+    }
+
+    button:hover {
+        background: #005fcc;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        color: #003366;
+    }
+
+    th {
+        background: rgba(255, 255, 255, 0.6);
+        font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .message {
+        color: green;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+
+    .error {
+        color: #ff4d4d;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+
+    a {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 20px;
+        background: #0072ff;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    a:hover {
+        background: #005fcc;
+    }
     </style>
 </head>
+
 <body>
-    <?php include "sidebar.php"; ?>
-    <div class="main">
-        <h1>Orders</h1>
+    <div class="card">
+        <h2>Place Order</h2>
 
-        <div class="card">
-            <h3>Place New Order</h3>
-            <?php if(isset($success)) echo "<p class='success'>$success</p>"; ?>
-            <?php if(isset($error)) echo "<p class='error'>$error</p>"; ?>
-            <form method="POST">
-                <select name="book_id" required>
-                    <option value="">Select a book</option>
-                    <?php while($b = $books->fetch_assoc()){ ?>
-                    <option value="<?= $b['id'] ?>"><?= htmlspecialchars($b['title']) ?> - $<?= $b['price'] ?> (Stock: <?= $b['stock'] ?>)</option>
-                    <?php } ?>
-                </select>
-                <input type="number" name="quantity" value="1" min="1" style="width:80px;" required>
-                <button type="submit">Place Order</button>
-            </form>
-        </div>
+        <?php if($message) echo "<p class='message'>$message</p>"; ?>
+        <?php if($error) echo "<p class='error'>$error</p>"; ?>
 
-        <div class="card">
-            <h3>Order History</h3>
-            <?php if($ordersResult->num_rows > 0){ ?>
-            <table>
-                <tr><th>Order #</th><th>Customer</th><th>Date</th><th>Amount</th><th>Status</th></tr>
-                <?php while($o = $ordersResult->fetch_assoc()){ ?>
-                <tr>
-                    <td>#<?= $o['id'] ?></td>
-                    <td><?= htmlspecialchars($o['username']) ?></td>
-                    <td><?= date("M d, Y H:i", strtotime($o['order_date'])) ?></td>
-                    <td>$<?= number_format($o['total_amount'], 2) ?></td>
-                    <td><?= ucfirst($o['status']) ?></td>
-                </tr>
+        <form method="POST" action="">
+            <select name="book_id" required>
+                <option value="">Select a book</option>
+                <?php while($b = mysqli_fetch_assoc($books_list)){ ?>
+                <option value="<?= $b['id'] ?>"><?= htmlspecialchars($b['title']) ?> - $<?= $b['price'] ?> (Stock: <?= $b['stock'] ?>)</option>
                 <?php } ?>
-            </table>
-            <?php } else { ?>
-            <p>No orders placed yet.</p>
+            </select>
+            <input type="number" name="quantity" placeholder="Quantity" min="1" required>
+            <button type="submit" name="place_order">Place Order</button>
+        </form>
+
+        <h2>Order History</h2>
+        <table>
+            <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+            <?php if(mysqli_num_rows($orders_result) > 0){
+                while($o = mysqli_fetch_assoc($orders_result)){ ?>
+            <tr>
+                <td>#<?= $o['id'] ?></td>
+                <td><?= htmlspecialchars($o['username']) ?></td>
+                <td>$<?= number_format($o['total_amount'], 2) ?></td>
+                <td><?= $o['status'] ?></td>
+                <td><?= $o['created_at'] ?></td>
+            </tr>
+            <?php } } else { ?>
+            <tr><td colspan="5">No orders yet.</td></tr>
             <?php } ?>
-        </div>
+        </table>
+
+        <a href="dashboard.php">Back to Dashboard</a>
     </div>
 </body>
+
 </html>

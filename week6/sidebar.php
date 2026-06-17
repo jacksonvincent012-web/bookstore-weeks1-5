@@ -1,9 +1,5 @@
 <?php
-session_start();
-if(!isset($_SESSION['user'])){
-    header("Location: login.php");
-    exit();
-}
+// sidebar.php — reusable navigation
 ?>
 <div class="sidebar">
     <a href="dashboard.php">Dashboard</a>
@@ -13,22 +9,23 @@ if(!isset($_SESSION['user'])){
     <a href="orders.php">Orders</a>
     <a href="ratings.php">Ratings</a>
     <a href="reports.php">Reports</a>
-    <a href="users.php">Users</a>
+    <a href="users.php">User Management</a>
     <a href="logout.php">Logout</a>
 </div>
+
 <style>
 .sidebar {
     width: 220px;
-    background: rgba(255,255,255,0.25);
+    background: rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(12px);
     padding: 20px;
-    box-shadow: 4px 0 12px rgba(0,0,0,0.2);
+    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     gap: 15px;
     min-height: 100vh;
-    position: fixed;
 }
+
 .sidebar a {
     display: block;
     padding: 12px;
@@ -36,11 +33,12 @@ if(!isset($_SESSION['user'])){
     text-decoration: none;
     font-weight: bold;
     color: #003366;
-    background: rgba(255,255,255,0.4);
+    background: rgba(255, 255, 255, 0.4);
     transition: 0.3s;
     text-align: center;
 }
+
 .sidebar a:hover {
-    background: rgba(255,255,255,0.6);
+    background: rgba(255, 255, 255, 0.6);
 }
 </style>

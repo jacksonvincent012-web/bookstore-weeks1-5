@@ -7,76 +7,141 @@ if(!isset($_SESSION['user'])){
     exit();
 }
 
-$search = "";
-if(isset($_GET['search'])){
-    $search = $_GET['search'];
-    $stmt = $conn->prepare("SELECT * FROM books WHERE title LIKE ? OR author LIKE ?");
-    $like = "%$search%";
-    $stmt->bind_param("ss", $like, $like);
-} else {
-    $stmt = $conn->prepare("SELECT * FROM books");
-}
-$stmt->execute();
-$result = $stmt->get_result();
+$result = $conn->query("SELECT * FROM books");
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Books Catalog - PageTurn</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Book Catalog - PageTurn</title>
     <style>
-    .search-box { margin: 20px 0; display: flex; gap: 10px; }
-    .search-box input { flex: 1; padding: 10px; border-radius: 6px; border: none; }
-    .search-box button { padding: 10px 18px; }
-    .success-msg { color: #28a745; font-weight: bold; }
-    .info-msg { color: #0072ff; font-weight: bold; }
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #0072ff, #00c6ff);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: #003366;
+        margin: 0;
+    }
+
+    .catalog-card {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(12px);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        width: 900px;
+        text-align: center;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th,
+    td {
+        padding: 12px;
+        text-align: left;
+        color: #003366;
+    }
+
+    th {
+        background: rgba(255, 255, 255, 0.6);
+        font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    a.action {
+        margin: 0 5px;
+        padding: 6px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    a.edit {
+        background: #0072ff;
+        color: #fff;
+    }
+
+    a.edit:hover {
+        background: #005fcc;
+    }
+
+    a.delete {
+        background: #ff4d4d;
+        color: #fff;
+    }
+
+    a.delete:hover {
+        background: #cc0000;
+    }
+
+    a.add {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 20px;
+        background: #0072ff;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    a.add:hover {
+        background: #005fcc;
+    }
     </style>
 </head>
+
 <body>
-    <?php include "sidebar.php"; ?>
-    <div class="main">
-        <?php if(isset($_GET['updated'])) echo "<p class='info-msg'>Book updated successfully!</p>"; ?>
-
-        <h1 class="page-title">Books Catalog</h1>
-
-        <form method="GET" class="search-box">
-            <input type="text" name="search" placeholder="Search by title or author" value="<?= htmlspecialchars($search) ?>">
-            <button type="submit">Search</button>
-        </form>
-
+    <div class="catalog-card">
+        <h2>Book Catalog</h2>
         <table>
             <tr>
-                <th>ID</th><th>Title</th><th>Author</th><th>Genre</th><th>Price</th>
-                <th>Stock</th><th>Rating</th><th>Actions</th>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Actions</th>
             </tr>
-            <?php if($result->num_rows > 0){
+            <?php
+            if($result->num_rows > 0){
                 while($row = $result->fetch_assoc()){
-                    $class = "";
-                    if($row['stock'] < 10) $class = "low-stock";
-                    if($row['stock'] > 50) $class = "high-stock";
+                    echo "<tr>";
+                    echo "<td>".$row['id']."</td>";
+                    echo "<td>".htmlspecialchars($row['title'])."</td>";
+                    echo "<td>".htmlspecialchars($row['author'])."</td>";
+                    echo "<td>
+                        <a href='edit_book.php?id=".$row['id']."' class='action edit'>Edit</a>
+                        <a href='delete_book.php?id=".$row['id']."' class='action delete' onclick=\"return confirm('Delete this book?');\">Delete</a>
+                    </td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='4'>No books found</td></tr>";
+            }
             ?>
-            <tr class="<?= $class ?>">
-                <td><?= $row['id'] ?></td>
-                <td><?= htmlspecialchars($row['title']) ?></td>
-                <td><?= htmlspecialchars($row['author']) ?></td>
-                <td><?= $row['genre'] ?></td>
-                <td>$<?= number_format($row['price'],2) ?></td>
-                <td><?= $row['stock'] ?></td>
-                <td><?= $row['rating'] ?></td>
-                <td>
-                    <a href="edit_book.php?id=<?= $row['id'] ?>" class="edit-btn">Edit</a>
-                    <a href="delete_book.php?id=<?= $row['id'] ?>" class="delete-btn">Delete</a>
-                </td>
-            </tr>
-            <?php } } else { ?>
-            <tr><td colspan="8">No books found</td></tr>
-            <?php } ?>
         </table>
-
-        <div style="margin-top:20px; display:flex; gap:10px;">
-            <a href="add_book.php" class="btn">Add New Book</a>
-            <a href="dashboard.php" class="btn">Dashboard</a>
-        </div>
+        <a href="add_book.php" class="add">Add New Book</a>
+        <a href="dashboard.php" class="add">Back to Dashboard</a>
     </div>
 </body>
+
 </html>

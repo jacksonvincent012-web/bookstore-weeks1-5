@@ -7,112 +7,194 @@ if(!isset($_SESSION['user'])){
     exit();
 }
 
-$userId = null;
-$userResult = mysqli_query($conn, "SELECT id FROM users WHERE username='" . $_SESSION['user'] . "'");
-if($userRow = $userResult->fetch_assoc()){
-    $userId = $userRow['id'];
-}
+$message = "";
+$error = "";
+$user_id = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id FROM users WHERE username='" . $_SESSION['user'] . "'"))['id'];
 
-// Submit rating
-if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['book_id'], $_POST['rating'])){
-    $bookId = intval($_POST['book_id']);
+if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_rating'])){
+    $book_id = intval($_POST['book_id']);
     $rating = floatval($_POST['rating']);
-    $review = trim($_POST['review'] ?? "");
+    $review = trim($_POST['review']);
 
-    if($rating < 0.5 || $rating > 5.0){
-        $error = "Rating must be between 0.5 and 5.0.";
+    if($rating < 1 || $rating > 5){
+        $error = "Rating must be between 1 and 5.";
     } else {
-        $stmt = $conn->prepare("INSERT INTO ratings (book_id, user_id, rating, review) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE rating = VALUES(rating), review = VALUES(review)");
-        $stmt->bind_param("iids", $bookId, $userId, $rating, $review);
+        $stmt = $conn->prepare("INSERT INTO ratings (book_id, user_id, rating, review) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE rating=VALUES(rating), review=VALUES(review)");
+        $stmt->bind_param("iids", $book_id, $user_id, $rating, $review);
         if($stmt->execute()){
-            // Update the average rating in books table
-            $avg = mysqli_fetch_assoc(mysqli_query($conn, "SELECT AVG(rating) AS avg FROM ratings WHERE book_id = $bookId"))['avg'];
-            $updateAvg = $conn->prepare("UPDATE books SET rating = ? WHERE id = ?");
-            $updateAvg->bind_param("di", $avg, $bookId);
-            $updateAvg->execute();
-
-            $success = "Rating submitted!";
+            $avg = mysqli_fetch_assoc(mysqli_query($conn, "SELECT AVG(rating) AS avg FROM ratings WHERE book_id=$book_id"))['avg'];
+            mysqli_query($conn, "UPDATE books SET rating=$avg WHERE id=$book_id");
+            $message = "Rating submitted!";
         } else {
-            $error = "Error submitting rating: " . $conn->error;
+            $error = "Error submitting rating.";
         }
     }
 }
 
-$books = mysqli_query($conn, "SELECT id, title, author FROM books ORDER BY title");
-$ratings = mysqli_query($conn, "SELECT r.rating, r.review, r.created_at, b.title AS book_title, u.username FROM ratings r JOIN books b ON r.book_id = b.id JOIN users u ON r.user_id = u.id ORDER BY r.created_at DESC");
+$ratings_result = mysqli_query($conn, "SELECT r.id, b.title AS book_title, u.username, r.rating, r.review, r.created_at FROM ratings r JOIN books b ON r.book_id = b.id JOIN users u ON r.user_id = u.id ORDER BY r.created_at DESC");
+$books_list = mysqli_query($conn, "SELECT id, title FROM books");
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Ratings - PageTurn</title>
     <style>
     body {
         font-family: 'Segoe UI', sans-serif;
         background: linear-gradient(135deg, #0072ff, #00c6ff);
-        margin: 0; padding: 0; color: #003366; display: flex;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        color: #003366;
+        margin: 0;
+        padding: 40px;
     }
-    .main { flex: 1; padding: 40px; margin-left: 260px; }
-    h1 { text-align: center; margin-bottom: 30px; }
+
     .card {
-        background: rgba(255,255,255,0.25); backdrop-filter: blur(12px);
-        padding: 20px; border-radius: 16px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2); margin-bottom: 20px;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(12px);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        width: 800px;
+        text-align: center;
     }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.3); }
-    th { background: rgba(255,255,255,0.3); }
-    select, input, textarea, button {
-        padding: 10px; margin: 5px 0; border: none; border-radius: 6px; width: 100%; box-sizing: border-box;
+
+    h2 {
+        margin-bottom: 20px;
+        font-weight: bold;
     }
-    button { background: #0072ff; color: #fff; font-weight: bold; cursor: pointer; width: auto; }
-    button:hover { background: #005fcc; }
-    .success { color: #28a745; font-weight: bold; }
-    .error { color: #ff4d4d; font-weight: bold; }
+
+    select, input, textarea {
+        padding: 12px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 8px;
+        width: 90%;
+        background: rgba(255, 255, 255, 0.4);
+        color: #003366;
+    }
+
+    textarea {
+        resize: vertical;
+    }
+
+    button {
+        padding: 12px 20px;
+        background: #0072ff;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        width: 95%;
+    }
+
+    button:hover {
+        background: #005fcc;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        color: #003366;
+    }
+
+    th {
+        background: rgba(255, 255, 255, 0.6);
+        font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .message {
+        color: green;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+
+    .error {
+        color: #ff4d4d;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+
+    a {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 20px;
+        background: #0072ff;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    a:hover {
+        background: #005fcc;
+    }
     </style>
 </head>
+
 <body>
-    <?php include "sidebar.php"; ?>
-    <div class="main">
-        <h1>Book Ratings & Reviews</h1>
+    <div class="card">
+        <h2>Rate a Book</h2>
 
-        <div class="card">
-            <h3>Submit a Rating</h3>
-            <?php if(isset($success)) echo "<p class='success'>$success</p>"; ?>
-            <?php if(isset($error)) echo "<p class='error'>$error</p>"; ?>
-            <form method="POST">
-                <select name="book_id" required>
-                    <option value="">Select a book</option>
-                    <?php while($b = $books->fetch_assoc()){ ?>
-                    <option value="<?= $b['id'] ?>"><?= htmlspecialchars($b['title']) ?> by <?= htmlspecialchars($b['author']) ?></option>
-                    <?php } ?>
-                </select>
-                <label>Rating (0.5 - 5.0)</label>
-                <input type="number" step="0.5" min="0.5" max="5.0" name="rating" required>
-                <label>Review (optional)</label>
-                <textarea name="review" rows="3" placeholder="Write your review..."></textarea>
-                <button type="submit">Submit Rating</button>
-            </form>
-        </div>
+        <?php if($message) echo "<p class='message'>$message</p>"; ?>
+        <?php if($error) echo "<p class='error'>$error</p>"; ?>
 
-        <div class="card">
-            <h3>All Ratings & Reviews</h3>
-            <?php if($ratings->num_rows > 0){ ?>
-            <table>
-                <tr><th>Book</th><th>User</th><th>Rating</th><th>Review</th><th>Date</th></tr>
-                <?php while($r = $ratings->fetch_assoc()){ ?>
-                <tr>
-                    <td><?= htmlspecialchars($r['book_title']) ?></td>
-                    <td><?= htmlspecialchars($r['username']) ?></td>
-                    <td><?= $r['rating'] ?> / 5</td>
-                    <td><?= $r['review'] ? htmlspecialchars($r['review']) : '-' ?></td>
-                    <td><?= date("M d, Y", strtotime($r['created_at'])) ?></td>
-                </tr>
+        <form method="POST" action="">
+            <select name="book_id" required>
+                <option value="">Select a book</option>
+                <?php while($b = mysqli_fetch_assoc($books_list)){ ?>
+                <option value="<?= $b['id'] ?>"><?= htmlspecialchars($b['title']) ?></option>
                 <?php } ?>
-            </table>
-            <?php } else { ?>
-            <p>No ratings yet. Be the first!</p>
+            </select>
+            <input type="number" name="rating" placeholder="Rating (1-5)" min="1" max="5" step="0.1" required>
+            <textarea name="review" placeholder="Write a review (optional)" rows="3"></textarea>
+            <button type="submit" name="submit_rating">Submit Rating</button>
+        </form>
+
+        <h2>All Ratings</h2>
+        <table>
+            <tr>
+                <th>Book</th>
+                <th>User</th>
+                <th>Rating</th>
+                <th>Review</th>
+                <th>Date</th>
+            </tr>
+            <?php if(mysqli_num_rows($ratings_result) > 0){
+                while($r = mysqli_fetch_assoc($ratings_result)){ ?>
+            <tr>
+                <td><?= htmlspecialchars($r['book_title']) ?></td>
+                <td><?= htmlspecialchars($r['username']) ?></td>
+                <td><?= $r['rating'] ?></td>
+                <td><?= htmlspecialchars($r['review'] ?: '-') ?></td>
+                <td><?= $r['created_at'] ?></td>
+            </tr>
+            <?php } } else { ?>
+            <tr><td colspan="5">No ratings yet.</td></tr>
             <?php } ?>
-        </div>
+        </table>
+
+        <a href="dashboard.php">Back to Dashboard</a>
     </div>
 </body>
+
 </html>

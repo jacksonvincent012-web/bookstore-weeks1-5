@@ -2,41 +2,28 @@
 include("db_connect.php");
 session_start();
 
-if(!isset($_SESSION['user'])){
-    header("Location: login.php");
-    exit();
-}
-
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    $title  = trim($_POST['title']);
+    $title = trim($_POST['title']);
     $author = trim($_POST['author']);
-    $genre  = trim($_POST['genre']);
-    $price  = trim($_POST['price']);
-    $stock  = trim($_POST['stock']);
-    $rating = trim($_POST['rating']);
 
-    $errors = [];
-    if(empty($title)) $errors[] = "Title is required.";
-    if(empty($author)) $errors[] = "Author is required.";
-    if(empty($genre)) $errors[] = "Genre is required.";
-    if($price === "" || !is_numeric($price) || $price < 0) $errors[] = "Valid price is required.";
-    if($stock === "" || !is_numeric($stock) || $stock < 0) $errors[] = "Valid stock quantity is required.";
-    if($rating === "" || !is_numeric($rating) || $rating < 0 || $rating > 5) $errors[] = "Rating must be between 0 and 5.";
+    if(!empty($title) && !empty($author)){
+        $stmt = $conn->prepare("INSERT INTO books (title, author) VALUES (?, ?)");
+        $stmt->bind_param("ss", $title, $author);
 
-    if(empty($errors)){
-        $stmt = $conn->prepare("INSERT INTO books (title, author, genre, price, stock, rating) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssdis", $title, $author, $genre, $price, $stock, $rating);
         if($stmt->execute()){
             header("Location: books.php?success=1");
             exit();
         } else {
             $error = "Error adding book: " . $conn->error;
         }
+    } else {
+        $error = "Please fill in all fields.";
     }
 }
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Add Book - PageTurn</title>
     <style>
@@ -46,70 +33,73 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 100vh;
-        margin: 0;
+        height: 100vh;
         color: #003366;
     }
+
     .card {
-        background: rgba(255,255,255,0.25);
+        background: rgba(255, 255, 255, 0.25);
         backdrop-filter: blur(12px);
         padding: 40px;
         border-radius: 16px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        width: 400px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        width: 380px;
+        text-align: center;
     }
-    h2 { text-align: center; margin-bottom: 20px; color: #fff; }
-    label { display: block; margin-top: 12px; font-weight: bold; color: #fff; }
-    input, select {
-        width: 100%; padding: 10px; margin-top: 4px;
-        border: none; border-radius: 6px; box-sizing: border-box;
+
+    h2 {
+        margin-bottom: 20px;
+        color: #003366;
+        font-weight: bold;
     }
+
+    input {
+        padding: 12px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 8px;
+        width: 90%;
+        background: rgba(255, 255, 255, 0.4);
+        color: #003366;
+    }
+
     button {
-        width: 100%; padding: 12px; margin-top: 20px;
-        border: none; border-radius: 6px;
-        background: #0072ff; color: #fff;
-        font-weight: bold; cursor: pointer;
+        padding: 12px 20px;
+        background: #0072ff;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        width: 95%;
     }
-    button:hover { background: #005fcc; }
-    .error { color: #ff4d4d; margin: 10px 0; font-weight: bold; text-align: center; }
-    .success { color: #28a745; font-weight: bold; text-align: center; }
-    a { display: block; text-align: center; margin-top: 15px; color: #fff; }
+
+    button:hover {
+        background: #005fcc;
+    }
+
+    .error {
+        color: #ff4d4d;
+        margin-top: 10px;
+        font-weight: bold;
+    }
     </style>
 </head>
+
 <body>
     <div class="card">
         <h2>Add New Book</h2>
-        <form method="POST">
-            <label>Title</label>
-            <input type="text" name="title" required>
-
-            <label>Author</label>
-            <input type="text" name="author" required>
-
-            <label>Genre</label>
-            <select name="genre" required>
-                <option value="">Select Genre</option>
-                <option value="Fiction">Fiction</option>
-                <option value="Business">Business</option>
-                <option value="Science">Science</option>
-                <option value="Productivity">Productivity</option>
-                <option value="Memoir">Memoir</option>
-            </select>
-
-            <label>Price ($)</label>
-            <input type="number" step="0.01" min="0" name="price" required>
-
-            <label>Stock</label>
-            <input type="number" min="0" name="stock" required>
-
-            <label>Rating (0-5)</label>
-            <input type="number" step="0.1" min="0" max="5" name="rating" required>
-
+        <form method="POST" action="">
+            <input type="text" name="title" placeholder="Enter book title"><br>
+            <input type="text" name="author" placeholder="Enter author name"><br>
             <button type="submit">Add Book</button>
         </form>
         <?php if(isset($error)) echo "<p class='error'>$error</p>"; ?>
-        <?php if(!empty($errors)) foreach($errors as $e) echo "<p class='error'>$e</p>"; ?>
-        <a href="books.php">Back to Books</a>
+        <div class="links">
+            <a href="books.php">Back to Books</a>
+        </div>
     </div>
 </body>
+
 </html>
