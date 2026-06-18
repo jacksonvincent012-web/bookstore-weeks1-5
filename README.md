@@ -35,6 +35,7 @@ PHP, HTML, CSS, JavaScript, SQL
 | **Week 5** | Full integration + role checks + styled dashboard |
 | **Week 6** | Prepared statements + orders/ratings + dashboard charts |
 | **Week 7** | Secure auth (password_hash, password_verify, registration) |
+| **Week 8** | Responsive Web Design + Mobile-First (Flexbox, Grid, media queries) |
 
 ## How to Run Locally
 
