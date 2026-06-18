@@ -13,8 +13,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(mysqli_num_rows($result) == 1){
         $row = mysqli_fetch_assoc($result);
 
-        // Direct check against plain password (e.g. 123456)
-        if($password === $row['password']){
+        if(password_verify($password, $row['password'])){
             $_SESSION['user'] = $row['username'];
             header("Location: dashboard.php");
             exit();
