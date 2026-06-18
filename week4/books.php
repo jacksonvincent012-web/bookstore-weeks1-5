@@ -166,12 +166,12 @@ $result = mysqli_query($conn, $sql);
     <?php include "sidebar.php"; ?>
 
     <div class="main">
-        <h2>📚 Book Catalog</h2>
+        <h2> Book Catalog</h2>
 
         <!-- Search bar -->
         <form method="GET" class="search-box">
             <input type="text" name="search" placeholder="Search by title or author" value="<?= $search ?>">
-            <button type="submit">🔍 Search</button>
+            <button type="submit"> Search</button>
         </form>
 
         <table>
@@ -201,8 +201,8 @@ $result = mysqli_query($conn, $sql);
                 <td><?= $row['stock'] ?: '—' ?></td>
                 <td><?= $row['rating'] ?: '—' ?></td>
                 <td>
-                    <a href="edit_book.php?id=<?= $row['id'] ?>" class="edit-btn">✏️ Edit</a>
-                    <a href="delete_book.php?id=<?= $row['id'] ?>" class="delete-btn">🗑 Delete</a>
+                    <a href="edit_book.php?id=<?= $row['id'] ?>" class="edit-btn"> Edit</a>
+                    <a href="delete_book.php?id=<?= $row['id'] ?>" class="delete-btn"> Delete</a>
                 </td>
             </tr>
             <?php } } else { ?>
@@ -213,8 +213,8 @@ $result = mysqli_query($conn, $sql);
         </table>
 
         <div class="links">
-            <a href="add_book.php">➕ Add New Book</a>
-            <a href="dashboard.php">⬅ Back to Dashboard</a>
+            <a href="add_book.php"> Add New Book</a>
+            <a href="dashboard.php"> Back to Dashboard</a>
         </div>
     </div>
 </body>

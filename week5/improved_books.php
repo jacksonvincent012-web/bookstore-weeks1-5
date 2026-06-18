@@ -114,7 +114,7 @@ $result = mysqli_query($conn, $sql);
 
 <body>
     <div class="catalog-card">
-        <h2>📚 Book Catalog</h2>
+        <h2> Book Catalog</h2>
         <table>
             <tr>
                 <th>ID</th>
@@ -130,8 +130,8 @@ $result = mysqli_query($conn, $sql);
                     echo "<td>".htmlspecialchars($row['title'])."</td>";
                     echo "<td>".htmlspecialchars($row['author'])."</td>";
                     echo "<td>
-                        <a href='edit_book.php?id=".$row['id']."' class='action edit'>✏️ Edit</a>
-                        <a href='delete_book.php?id=".$row['id']."' class='action delete' onclick=\"return confirm('Delete this book?');\">🗑 Delete</a>
+                        <a href='edit_book.php?id=".$row['id']."' class='action edit'> Edit</a>
+                        <a href='delete_book.php?id=".$row['id']."' class='action delete' onclick=\"return confirm('Delete this book?');\"> Delete</a>
                     </td>";
                     echo "</tr>";
                 }
@@ -140,8 +140,8 @@ $result = mysqli_query($conn, $sql);
             }
             ?>
         </table>
-        <a href="add_book.php" class="add">➕ Add New Book</a>
-        <a href="dashboard.php" class="add">⬅ Back to Dashboard</a>
+        <a href="add_book.php" class="add"> Add New Book</a>
+        <a href="dashboard.php" class="add"> Back to Dashboard</a>
     </div>
 </body>
 

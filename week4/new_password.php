@@ -12,7 +12,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if($new_password === $confirm_password){
         $hashed = password_hash($new_password, PASSWORD_BCRYPT);
 
-        // ✅ Email reset flow
+        //  Email reset flow
         if(!empty($_GET['token'])){
             $token = $_GET['token'];
             $stmt = $conn->prepare("SELECT email FROM password_resets WHERE token=? AND expires_at > NOW()");
@@ -28,10 +28,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 header("Location: login.php?reset=success");
                 exit();
             } else {
-                $error = "❌ Invalid or expired token.";
+                $error = " Invalid or expired token.";
             }
         }
-        // ✅ Phone OTP flow
+        //  Phone OTP flow
         elseif(!empty($_POST['otp'])){
             $otp = $_POST['otp'];
             if(isset($_SESSION['otp']) && $otp == $_SESSION['otp']){
@@ -43,11 +43,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 header("Location: login.php?reset=success");
                 exit();
             } else {
-                $error = "❌ Invalid OTP.";
+                $error = " Invalid OTP.";
             }
         }
     } else {
-        $error = "❌ Passwords do not match.";
+        $error = " Passwords do not match.";
     }
 }
 ?>
@@ -119,7 +119,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 <body>
     <div class="card">
-        <h2>🔒 Set New Password</h2>
+        <h2> Set New Password</h2>
         <form method="POST" action="">
             <input type="password" name="new_password" placeholder="Enter new password"><br>
             <input type="password" name="confirm_password" placeholder="Confirm new password"><br>
@@ -132,7 +132,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         </form>
         <?php if(isset($error)) echo "<p class='error'>$error</p>"; ?>
         <div class="links">
-            <a href="login.php">⬅ Back to Login</a>
+            <a href="login.php"> Back to Login</a>
         </div>
     </div>
 </body>

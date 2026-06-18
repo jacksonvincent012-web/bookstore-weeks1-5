@@ -9,6 +9,6 @@ $dbname     = "bookstoredb"; // make sure this database exists in phpMyAdmin
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 
 if(!$conn){
-    die("❌ Database Connection Failed: " . mysqli_connect_error());
+    die(" Database Connection Failed: " . mysqli_connect_error());
 }
 ?>

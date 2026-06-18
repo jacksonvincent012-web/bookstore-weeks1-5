@@ -121,7 +121,7 @@ $result = mysqli_query($conn, "SELECT * FROM users");
 
 <body>
     <div class="card">
-        <h2>👥 User Management</h2>
+        <h2> User Management</h2>
         <table>
             <tr>
                 <th>ID</th>
@@ -135,14 +135,14 @@ $result = mysqli_query($conn, "SELECT * FROM users");
                 <td><?= htmlspecialchars($row['username']); ?></td>
                 <td><?= htmlspecialchars($row['role']); ?></td>
                 <td>
-                    <a href="edit_user.php?id=<?= $row['id']; ?>" class="btn edit">✏️ Edit</a>
+                    <a href="edit_user.php?id=<?= $row['id']; ?>" class="btn edit"> Edit</a>
                     <a href="delete_user.php?id=<?= $row['id']; ?>" class="btn delete"
-                        onclick="return confirm('Are you sure you want to delete this user?');">🗑 Delete</a>
+                        onclick="return confirm('Are you sure you want to delete this user?');"> Delete</a>
                 </td>
             </tr>
             <?php } ?>
         </table>
-        <a href="dashboard.php" class="back">⬅ Back to Dashboard</a>
+        <a href="dashboard.php" class="back"> Back to Dashboard</a>
     </div>
 </body>
 

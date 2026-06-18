@@ -21,7 +21,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         header("Location: books.php?success=1");
         exit();
     } else {
-        $error = "❌ Error adding book: " . mysqli_error($conn);
+        $error = " Error adding book: " . mysqli_error($conn);
     }
 }
 ?>
@@ -38,7 +38,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <?php include "sidebar.php"; ?>
 
     <div class="main">
-        <h1 class="page-title">➕ Add New Book</h1>
+        <h1 class="page-title"> Add New Book</h1>
 
         <form method="POST" class="form-card">
             <label>Title</label>

@@ -63,9 +63,9 @@ function checkRole($requiredRole){
 
 <body>
     <div class="card">
-        <h2>❌ Access Denied</h2>
+        <h2> Access Denied</h2>
         <p>You must be an <strong><?php echo ucfirst($requiredRole); ?></strong> to view this page.</p>
-        <a href="dashboard.php">⬅ Back to Dashboard</a>
+        <a href="dashboard.php"> Back to Dashboard</a>
     </div>
 </body>
 

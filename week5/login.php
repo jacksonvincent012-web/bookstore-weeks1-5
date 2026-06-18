@@ -13,16 +13,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(mysqli_num_rows($result) == 1){
         $row = mysqli_fetch_assoc($result);
 
-        // Direct check against plain password (e.g. 123456)
-        if($password === $row['password']){
+        if(password_verify($password, $row['password'])){
             $_SESSION['user'] = $row['username'];
             header("Location: dashboard.php");
             exit();
         } else {
-            $error = "⚠️ Invalid password!";
+            $error = " Invalid password!";
         }
     } else {
-        $error = "⚠️ User not found!";
+        $error = " User not found!";
     }
 }
 ?>
@@ -91,7 +90,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 <body>
     <div class="login-box">
-        <h2>🔑 Login</h2>
+        <h2> Login</h2>
         <form method="POST" action="">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>

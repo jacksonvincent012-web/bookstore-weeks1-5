@@ -91,7 +91,7 @@
 
 <body>
     <div class="card">
-        <h2>📝 Register</h2>
+        <h2> Register</h2>
         <form method="POST" action="">
             <input type="text" name="username" placeholder="Username" required><br>
             <input type="email" name="email" placeholder="Email" required><br>
@@ -103,7 +103,7 @@
         if(isset($success)) echo "<p class='success'>$success</p>"; 
         ?>
         <div class="links">
-            <a href="login.php">⬅ Back to Login</a>
+            <a href="login.php"> Back to Login</a>
         </div>
     </div>
 </body>

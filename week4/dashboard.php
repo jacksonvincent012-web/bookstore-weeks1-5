@@ -113,24 +113,24 @@ if(!isset($_SESSION['user'])){
     <?php include "sidebar.php"; ?>
 
     <div class="main">
-        <h1 class="page-title">📊 Dashboard Overview</h1>
+        <h1 class="page-title"> Dashboard Overview</h1>
 
         <!-- Stat cards -->
         <div class="stats">
-            <div class="card">📚 1,248 <small>Total Books</small></div>
-            <div class="card">💰 $48,320 <small>Total Revenue</small></div>
-            <div class="card">👥 384 <small>Active Users</small></div>
-            <div class="card">🛒 67 <small>Orders Today</small></div>
+            <div class="card"> 1,248 <small>Total Books</small></div>
+            <div class="card"> $48,320 <small>Total Revenue</small></div>
+            <div class="card"> 384 <small>Active Users</small></div>
+            <div class="card"> 67 <small>Orders Today</small></div>
         </div>
 
         <!-- Charts -->
         <div class="charts">
             <div class="chart">
-                <h2>💰 Revenue Overview</h2>
+                <h2> Revenue Overview</h2>
                 <canvas id="revenueChart"></canvas>
             </div>
             <div class="chart">
-                <h2>📚 Books by Genre</h2>
+                <h2> Books by Genre</h2>
                 <canvas id="genreChart"></canvas>
             </div>
         </div>

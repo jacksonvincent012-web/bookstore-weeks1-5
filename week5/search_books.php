@@ -121,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <body>
                     <div class="card">
-                        <h2>🔍 Search Books</h2>
+                        <h2> Search Books</h2>
                         <form method="POST" action="">
                             <input type="text" name="search" placeholder="Enter title or author">
                             <button type="submit">Search</button>
@@ -141,10 +141,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <?php } ?>
                         </table>
                         <?php } elseif($_SERVER["REQUEST_METHOD"] == "POST") { ?>
-                        <p>⚠️ No books found matching your search.</p>
+                        <p> No books found matching your search.</p>
                         <?php } ?>
 
-                        <a href="dashboard.php">⬅ Back to Dashboard</a>
+                        <a href="dashboard.php"> Back to Dashboard</a>
                     </div>
                 </body>
 

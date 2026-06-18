@@ -26,7 +26,7 @@ $result = mysqli_query($conn, $sql);
     <?php include "sidebar.php"; ?>
 
     <div class="main">
-        <h1 class="page-title">📚 Books Catalog</h1>
+        <h1 class="page-title"> Books Catalog</h1>
 
         <div class="card-table">
             <table>

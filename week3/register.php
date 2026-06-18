@@ -15,9 +15,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             VALUES ('$username', '$email', '$hashedPassword', 'user', '$phone')";
 
     if(mysqli_query($conn, $sql)){
-        echo "<p style='color:green;'>✅ Registration successful! You can now log in.</p>";
+        echo "<p style='color:green;'> Registration successful! You can now log in.</p>";
     } else {
-        echo "<p style='color:red;'>⚠️ Error: " . mysqli_error($conn) . "</p>";
+        echo "<p style='color:red;'> Error: " . mysqli_error($conn) . "</p>";
     }
 }
 ?>
@@ -82,7 +82,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 <body>
     <div class="register-box">
-        <h2>📝 Register</h2>
+        <h2> Register</h2>
         <form method="POST" action="register.php">
             <input type="text" name="username" placeholder="Username" required>
             <input type="email" name="email" placeholder="Email" required>

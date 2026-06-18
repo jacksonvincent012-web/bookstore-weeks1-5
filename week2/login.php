@@ -6,15 +6,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
+    $sql = "SELECT * FROM users WHERE username='$username' LIMIT 1";
     $result = mysqli_query($conn, $sql);
 
     if(mysqli_num_rows($result) == 1){
-        $_SESSION['user'] = $username;
-        header("Location: dashboard.php");
-        exit();
+        $row = mysqli_fetch_assoc($result);
+        if(password_verify($password, $row['password'])){
+            $_SESSION['user'] = $username;
+            header("Location: dashboard.php");
+            exit();
+        } else {
+            $error = "Invalid password!";
+        }
     } else {
-        $error = "Invalid username or password!";
+        $error = "User not found!";
     }
 }
 ?>

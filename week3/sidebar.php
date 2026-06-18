@@ -1,9 +1,9 @@
 <div class="sidebar">
-    <a href="dashboard.php">🏠 Dashboard</a>
-    <a href="improved_books.php">📚 Books Catalog</a>
-    <a href="add_book.php">➕ Add Book</a>
-    <a href="reports.php">📊 Reports</a>
-    <a href="logout.php">🚪 Logout</a>
+    <a href="dashboard.php"> Dashboard</a>
+    <a href="improved_books.php"> Books Catalog</a>
+    <a href="add_book.php"> Add Book</a>
+    <a href="reports.php"> Reports</a>
+    <a href="logout.php"> Logout</a>
 </div>
 
 <style>

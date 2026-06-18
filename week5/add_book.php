@@ -14,10 +14,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: books.php?success=1");
             exit();
         } else {
-            $error = "❌ Error adding book: " . $conn->error;
+            $error = " Error adding book: " . $conn->error;
         }
     } else {
-        $error = "⚠️ Please fill in all fields.";
+        $error = " Please fill in all fields.";
     }
 }
 ?>
@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <div class="card">
-        <h2>📚 Add New Book</h2>
+        <h2> Add New Book</h2>
         <form method="POST" action="">
             <input type="text" name="title" placeholder="Enter book title"><br>
             <input type="text" name="author" placeholder="Enter author name"><br>
@@ -97,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
         <?php if(isset($error)) echo "<p class='error'>$error</p>"; ?>
         <div class="links">
-            <a href="books.php">⬅ Back to Books</a>
+            <a href="books.php"> Back to Books</a>
         </div>
     </div>
 </body>
