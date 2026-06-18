@@ -45,4 +45,4 @@ PHP, HTML, CSS, JavaScript, SQL
    ```
 3. Import `week6/week6_schema.sql` into phpMyAdmin (database: `bookstoredb`).
 4. Visit `http://localhost/bookstore-weeks1-5/week7/`.
-5. Login: `admin` / `123456`
+5. Login: `admin` / `P@geTurn2024`
