@@ -8,8 +8,9 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background: #f4f7fb;
+    color: #003366;
+    background: linear-gradient(135deg, #0072ff, #00c6ff);
+    min-height: 100vh;
 }
 
 img {
@@ -32,9 +33,10 @@ a {
 
 /* ===== PROFILE PAGE ===== */
 .profile-card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     padding: 2rem 1.5rem;
     margin-top: 2rem;
     display: flex;
@@ -54,8 +56,9 @@ a {
 
 .profile-info h1 {
     font-size: 1.5rem;
-    color: #003366;
+    color: #fff;
     margin-bottom: 0.25rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .profile-info .title {
@@ -67,17 +70,9 @@ a {
 
 .profile-info .about {
     font-size: 0.95rem;
-    color: #555;
+    color: #003366;
     margin-bottom: 1.25rem;
     max-width: 400px;
-}
-
-.contact-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    font-size: 0.95rem;
 }
 
 .contact-list li {
@@ -87,17 +82,27 @@ a {
     justify-content: center;
 }
 
+.contact-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: #fff;
+}
+
 .contact-list .label {
     font-weight: 600;
-    color: #003366;
+    color: #fff;
 }
 
 /* ===== PRODUCT SHOWCASE ===== */
 .section-title {
     font-size: 1.5rem;
-    color: #003366;
+    color: #fff;
     text-align: center;
     margin: 2rem 0 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .product-grid {
@@ -108,9 +113,10 @@ a {
 }
 
 .product-card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -131,13 +137,14 @@ a {
 
 .product-body h3 {
     font-size: 1.1rem;
-    color: #003366;
+    color: #fff;
     margin-bottom: 0.4rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .product-body .desc {
     font-size: 0.9rem;
-    color: #555;
+    color: #003366;
     flex: 1;
     margin-bottom: 0.75rem;
 }
@@ -218,5 +225,6 @@ a {
 
     .section-title {
         font-size: 1.75rem;
+        color: #fff;
     }
 }
