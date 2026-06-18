@@ -37,14 +37,16 @@ PHP, HTML, CSS, JavaScript, SQL
 | **Week 7** | Secure auth (password_hash, password_verify, registration) |
 | **Week 8** | Responsive Web Design + Mobile-First (Flexbox, Grid, media queries) |
 
-## How to Run Locally
+# Project Setup Instructions
 
-1. Install XAMPP and start Apache + MySQL.
-2. Clone this repo into your `htdocs` folder:
-   ```bash
-   git clone https://github.com/jacksonvincent012-web/bookstore-weeks1-5.git
-   ```
-3. Import `week6/week6_schema.sql` into phpMyAdmin (database: `bookstoredb`).
-4. Visit `http://localhost/bookstore-weeks1-5/week6/7.
-5. visit'http://localhost/week8/profile.html
-6. Login: `admin` / `P@geTurn2024`
+Follow these steps to set up and run the project locally:
+
+## 1. Prerequisites & Installation
+* Download and install [XAMPP](https://www.apachefriends.org/).
+* Open the XAMPP Control Panel and start **Apache** and **MySQL**.
+
+## 2. Clone the Repository
+Navigate to your XAMPP `htdocs` directory and clone the project:
+```bash
+cd c:/xampp/htdocs
+git clone [https://github.com/jacksonvincent012-web/bookstore-weeks1-5.git](https://github.com/jacksonvincent012-web/bookstore-weeks1-5.git)
