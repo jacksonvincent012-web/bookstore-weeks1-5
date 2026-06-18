@@ -45,5 +45,6 @@ PHP, HTML, CSS, JavaScript, SQL
    git clone https://github.com/jacksonvincent012-web/bookstore-weeks1-5.git
    ```
 3. Import `week6/week6_schema.sql` into phpMyAdmin (database: `bookstoredb`).
-4. Visit `http://localhost/bookstore-weeks1-5/week7/`.
-5. Login: `admin` / `P@geTurn2024`
+4. Visit `http://localhost/bookstore-weeks1-5/week6/7.
+5. visit'http://localhost/week8/profile.html
+6. Login: `admin` / `P@geTurn2024`
