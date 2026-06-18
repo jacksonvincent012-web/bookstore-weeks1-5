@@ -14,7 +14,7 @@ Unit Code & Name: BIT 3208 – Advanced Web Design
 <img width="1920" height="1032" alt="Screenshot 2026-06-17 111934" src="https://github.com/user-attachments/assets/9580a12d-b6b6-4e9b-b81b-ab6c30c2fe25" />
 
 
-A PHP + MySQL bookstore management system built progressively over 7 weeks, demonstrating database design, CRUD, secure authentication, and reporting.
+A PHP + MySQL bookstore management system built progressively over 8 weeks, demonstrating database design, CRUD, secure authentication, and reporting,Responsive Web Design + Mobile-First (Flexbox, Grid, media queries) 
 
 ## Tech Stack
 
