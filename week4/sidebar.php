@@ -6,6 +6,7 @@
     <a href="add_book.php"> Add Book</a>
     <a href="reports.php"> Reports</a>
     <a href="logout.php"> Logout</a>
+    <?php include '../week_nav.php'; ?>
 </div>
 
 <style>

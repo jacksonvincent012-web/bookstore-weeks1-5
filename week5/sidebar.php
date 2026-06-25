@@ -9,6 +9,7 @@
     <a href="reports.php"> Reports</a>
     <a href="users.php"> User Management</a>
     <a href="logout.php"> Logout</a>
+    <?php include '../week_nav.php'; ?>
 </div>
 
 <style>
